@@ -164,12 +164,16 @@ public class ItemFragment extends BaseFragment {
         if (refresh) {
             mList.clear();
         }
-        for (int i = 0; i < 20; i++) {
-            mList.add(new ItemBean(page * 20 - 10 + i + 1, "Colin-->>" + String.valueOf(page * 10 - 10 + i + 1), ViewPagerActivity.class));
+        for (int i = 0; i < pageSize; i++) {
+            mList.add(new ItemBean(getIndex(page, pageSize, i), "Colin-->>" + String.valueOf(getIndex(page, pageSize, i)), ViewPagerActivity.class));
         }
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_NO);
         mAdapter.setFootState(BaseAdapter.FOOT_STATE_FINISH);
         mAdapter.notifyDataSetChanged();
         refresh_list.setRefreshing(false);
+    }
+
+    private int getIndex(int page, int size, int i) {
+        return (page - 1) * size + i + 1;
     }
 }

@@ -96,6 +96,7 @@ dependencies {
     implementation librarys.recyclerview
     implementation librarys.constraint
     implementation librarys.glide
+    implementation librarys.okhttp
     implementation librarys.gson
 
 

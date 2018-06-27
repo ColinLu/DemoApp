@@ -14,16 +14,16 @@ public class ApkInstallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (StringUtil.isEmpty(action)) {
-            LogUtil.e("action-->>" + String.valueOf(action));
             return;
         }
+        LogUtil.e("action-->>" + String.valueOf(action));
         //加载完成安装
         if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
             long downloadApkId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, AppUpdateManager.STATUS_UN_FIND);
             if (downloadApkId == AppUpdateManager.STATUS_UN_FIND) {
                 return;
             }
-//            AppUpdateManager.getInstance().installApk(context, downloadApkId);
+            AppUpdateManager.getInstance().installApk(context, downloadApkId);
         } else if (action.equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
             //处理 如果还未完成下载，用户点击Notification
             Intent viewDownloadIntent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);

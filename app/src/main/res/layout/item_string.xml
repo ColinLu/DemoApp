@@ -5,6 +5,7 @@
                                              android:id="@+id/layout_item_content"
                                              android:layout_width="match_parent"
                                              android:layout_height="45dp"
+                                             android:layout_marginTop="@dimen/margin"
                                              android:background="@drawable/shape_ffffff"
                                              android:minHeight="43dp">
 
@@ -16,7 +17,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="8dp"
         android:gravity="left|center_vertical|start"
-        android:minWidth="60dp"
+        android:minWidth="20dp"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +32,6 @@
         android:id="@+id/image_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
         android:contentDescription="@string/action_settings"
         android:cropToPadding="false"
         android:scaleType="fitCenter"

@@ -23,6 +23,7 @@ public class UpdaterConfig {
     public boolean mCanMediaScanner;
     public boolean mAllowedOverRoaming;
     public int mAllowedNetworkTypes = ~0;// default to all network types allowed
+    public OnDownloadListener mOnDownloadListener;//接口回调 监听进度
 
 
     public UpdaterConfig(Context context) {
@@ -133,6 +134,16 @@ public class UpdaterConfig {
             return this;
         }
 
+        /**
+         * 接口回调
+         *
+         * @param onDownloadListener
+         * @return
+         */
+        public Builder setOnDownloadListener(OnDownloadListener onDownloadListener) {
+            this.updaterConfig.mOnDownloadListener = onDownloadListener;
+            return this;
+        }
 
         public UpdaterConfig build() {
             return updaterConfig;
@@ -153,5 +164,9 @@ public class UpdaterConfig {
         int NETWORK_WIFI = 1 << 1;
     }
 
+    public interface OnDownloadListener {
+        void progress(int status, int[] progress);
 
+        void loadFinish(int downloadID);
+    }
 }

@@ -44,6 +44,7 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isFirstInvisible = true;
     protected boolean isFirstResume = true;
     protected int page = 1;
+    protected int pageSize = 20;
 
     /**
      * 当Activity与Fragment发生关联时调用

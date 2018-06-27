@@ -48,6 +48,14 @@ public class DownloadManagerActivity extends BaseActivity {
 
 
         });
+        findViewById(R.id.button_download_progress).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downApp();
+            }
+
+
+        });
     }
 
     @Override
@@ -78,8 +86,6 @@ public class DownloadManagerActivity extends BaseActivity {
                 .setCanMediaScanner(true)
                 .build();
         AppUpdateManager.getInstance().download(config);
-
-
     }
 
     @Override
