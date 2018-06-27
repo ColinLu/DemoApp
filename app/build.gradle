@@ -1,0 +1,102 @@
+apply plugin: 'com.android.application'
+
+def config = rootProject.ext.android        // 配置
+def librarys = rootProject.ext.dependencies // 依赖
+
+// 加载 sign.properties 资源
+Properties signingProperties = new Properties()
+signingProperties.load(new FileInputStream(file('sign.properties')))
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+
+    signingConfigs {
+        release {
+            v1SigningEnabled true
+            v2SigningEnabled true
+            storeFile file(signingProperties['KEYSTORE_FILEPATH'])
+            storePassword signingProperties['STORE_PASSWORD']
+            keyAlias signingProperties['KEY_ALIAS']
+            keyPassword signingProperties['KEY_PASSWORD']
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.colin.demo.app"
+
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['libs']
+            }
+        }
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    //app打包配置   打包apk重命名
+    buildTypes {
+        release {
+            minifyEnabled true     //打开混淆
+            zipAlignEnabled true    //是否移除无用资源
+            buildConfigField "boolean", "debugMode", "false"
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all {
+                variant -> generateApk(variant)
+            }
+        }
+        debug {
+            minifyEnabled false     //关闭混淆
+            shrinkResources false   //是否清理无用资源,依赖于minifyEnabled
+            zipAlignEnabled true    //是否移除无用资源
+            buildConfigField "boolean", "debugMode", "true"
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all {
+                variant -> generateApk(variant)
+            }
+        }
+    }
+}
+//签名打包输入路径与app输入名字
+def generateApk(variant) {
+    if (variant.buildType.name == "release") {
+        variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/app/outputs")
+        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
+//            apkData.outputFileName = "fenqi_release_${getTime()}.apk"
+            apkData.outputFileName = "demo_release.apk"
+        }
+    }
+}
+
+static def getTime() {
+    return new Date().format('yyyy_MM_dd_HH_mm_ss')
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+    implementation librarys.appcompat
+    implementation librarys.supportV4
+    implementation librarys.design
+    implementation librarys.vectorDrawable
+    implementation librarys.recyclerview
+    implementation librarys.constraint
+    implementation librarys.glide
+    implementation librarys.gson
+
+
+}

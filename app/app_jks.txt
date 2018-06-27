@@ -1,0 +1,42 @@
+D:\Users\CaiXinBao\Code\Demo\WebBridgeDemo\app>
+密码： ludapeng31
+keytool -v -list -keystore app.jks
+
+输入密钥库口令:
+
+密钥库类型: JKS
+密钥库提供方: SUN
+
+您的密钥库包含 1 个条目
+
+别名: china
+创建日期: 2017-3-24
+条目类型: PrivateKeyEntry
+证书链长度: 1
+证书[1]:
+所有者: CN=ColinLu, OU=ColinLu, O=ColinLu, L=ChengDu, ST=SiChuan, C=cn
+发布者: CN=ColinLu, OU=ColinLu, O=ColinLu, L=ChengDu, ST=SiChuan, C=cn
+序列号: 52e09e1
+有效期开始日期: Fri Mar 24 11:46:58 CST 2017, 截止日期: Tue Mar 18 11:46:58 CST 2042
+证书指纹:
+         MD5: 39:8A:00:86:02:38:59:4A:FA:46:61:8E:7D:70:B9:02
+         SHA1: 47:35:52:80:F0:EB:72:7D:5F:65:C3:19:08:8C:6B:35:D6:1E:0A:67
+         SHA256: 96:81:26:AD:8D:2B:91:DB:6D:A1:0B:F7:0E:48:BC:CA:64:9D:68:50:1C:4A:CB:17:9B:46:58:1D:8E:AE:AB:8E
+         签名算法名称: SHA256withRSA
+         版本: 3
+
+扩展:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: D6 73 38 CF FE D9 2B 2B   51 BB 2B 5A 41 4A 66 6A  .s8...++Q.+ZAJfj
+0010: F8 C0 4D A7                                        ..M.
+]
+]
+
+
+
+*******************************************
+*******************************************
+
