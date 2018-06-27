@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">DemoApp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="list_empty_tips">这里好像什么都没有</string>
+    <string name="list_empty_loading">网络请求中，请稍等。。。</string>
+    <string name="list_empty_error">网络请求错误，请点击重试</string>
+    <string name="http_load_foot_londing">网络请求中，请稍等。。。</string>
+    <string name="http_load_foot_wait">更多内容</string>
+    <string name="http_load_foot_finish">已经没有内容了</string>
+
+    <string name="communicate">Communicate</string>
+    <string name="tools">工具</string>
+    <string name="slideshow">Slideshow</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">相机</string>
+    <string name="share">分享</string>
+    <string name="send">发送</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">首页</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="text">Demo</string>
+    <string name="action_settings">设置</string>
+    <string name="search">搜索</string>
+    <string name="ok">确认</string>
+    <string name="sure">确定</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="login">登录</string>
+    <string name="logout">确定退出</string>
+    <string name="name">姓名</string>
+    <string name="password">密码</string>
+    <string name="submit">提交</string>
+    <string name="edit">编辑</string>
+    <string name="finish">完成</string>
+    <string name="iknow">知道了</string>
+    <string name="qr_code">扫一扫</string>
+    <string name="register">注册</string>
+    <string name="code">验证码</string>
+    <string name="phone">手机号</string>
+    <string name="login_again">是否重新登录?</string>
+    <string name="title_activity_recycler_view">RecyclerViewActivity</string>
+    <string name="download">下载</string>
+
+    <string name="system_download_component_disable">下载服务不可用,请您启用</string>
+    <string name="system_download_description">版本更新</string>
+</resources>

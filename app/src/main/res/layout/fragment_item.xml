@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                              xmlns:tools="http://schemas.android.com/tools"
+                                              style="@style/SwipeRefreshStyle">
+
+    <android.support.v7.widget.RecyclerView
+        android:name="com.colin.demo.app.fragment.ItemFragment"
+        style="@style/RecyclerStyle"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_string"/>
+</android.support.v4.widget.SwipeRefreshLayout>

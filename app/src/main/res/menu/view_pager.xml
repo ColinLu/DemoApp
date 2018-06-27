@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/pager_transformer_standard"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Standard"/>
+    <item
+        android:id="@+id/pager_transformer_rotate_up"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="RotateUp"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_rotate"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="RotateY"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_alpha"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Alpha"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_scale"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Scale"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_scale_in"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="ScaleIn"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_scale_alpha"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Scale and Alpha"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_rotate_alpha"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="RotateDown and Alpha"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/pager_transformer_rotate_alpha_scale"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="RotateDown and Alpha And ScaleIn"
+        app:showAsAction="never"/>
+</menu>

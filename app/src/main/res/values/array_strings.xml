@@ -1,0 +1,12 @@
+<resources>
+    <string-array name="magic_effect">
+        <item>Standard</item>
+        <item>RotateDown</item>
+        <item>RotateUp</item>
+        <item>RotateY</item>
+        <item>Alpha</item>
+        <item>ScaleIn</item>
+        <item>RotateDown and Alpha</item>
+        <item>RotateDown and Alpha And ScaleIn</item>
+    </string-array>
+</resources>

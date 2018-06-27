@@ -1,0 +1,92 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/ActivityAnim</item>
+    </style>
+
+    <style name="DrawerStyle" parent="AppTheme.NoActionBar">
+
+    </style>
+
+    <style name="ActivityAnim" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_finish_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_finish_out</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!--&lt;!&ndash;app 全局的Style&ndash;&gt;-->
+    <!--<style name="AppStyle" parent="AppTheme.NoActionBar">-->
+    <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+    <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+    <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--<item name="android:windowAnimationStyle">@style/ActivityAnim</item>-->
+    <!--</style>-->
+
+
+    <!--&lt;!&ndash;App 标题 AppBarLayout Theme&ndash;&gt;-->
+    <!--<style name="AppBarLayoutTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>-->
+
+    <!--&lt;!&ndash;App  ToolBar菜单样式 &ndash;&gt;-->
+    <!--<style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">-->
+    <!--<item name="actionMenuTextColor">@color/color_212121</item> &lt;!&ndash;  敲定颜色&ndash;&gt;-->
+    <!--<item name="android:textSize">16sp</item> &lt;!&ndash;  搞掂字体大小&ndash;&gt;-->
+    <!--<item name="android:textColorPrimary">@color/colorAccent</item>-->
+    <!--<item name="android:textColorSecondary">@color/colorAccent</item>-->
+    <!--</style>-->
+    <!--&lt;!&ndash;App Toolbar的Theme的设置，针对popup的设置&ndash;&gt;-->
+    <!--<style name="PopupTheme" parent="ThemeOverlay.AppCompat.Light">-->
+    <!--<item name="android:colorBackground">@color/colorPrimary</item>&lt;!&ndash;设置背景颜色的&ndash;&gt;-->
+    <!--<item name="android:textColorPrimary">@color/color_212121</item>&lt;!&ndash;设置文字颜色的&ndash;&gt;-->
+    <!--<item name="android:textSize">16sp</item>&lt;!&ndash;设置文字大小的&ndash;&gt;-->
+    <!--<item name="actionOverflowMenuStyle">@style/MenuStyle</item>&lt;!&ndash;设置弹出位置的主题&ndash;&gt;-->
+    <!--</style>-->
+
+    <!--&lt;!&ndash;Toolbar弹出popup主题的设置这里注意一个问题：actionOverflowMenuStyle这个属性什么版本都可以使用，-->
+    <!--但是如果你写成android:actionOverflowMenuStyle的话，就变成了只有21版本才能使用的了。-->
+    <!--&ndash;&gt;-->
+    <!--<style name="MenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">-->
+    <!--<item name="overlapAnchor">false</item>&lt;!&ndash;这个属性设置为false，就能使得popup在Toolbar的下面显示&ndash;&gt;-->
+    <!--</style>-->
+
+    <style name="SwipeRefreshStyle">
+        <item name="android:id" tools:ignore="AaptCrash">@+id/refresh_list</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="RecyclerStyle">
+        <item name="android:id" tools:ignore="AaptCrash">@+id/recycler_list</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:layout_marginBottom">@dimen/margin</item>
+        <item name="android:layout_marginLeft">@dimen/margin</item>
+        <item name="android:layout_marginRight">@dimen/margin</item>
+        <item name="android:layout_marginTop">@dimen/margin</item>
+        <item name="android:background">@drawable/button_style</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/button_size</item>
+    </style>
+
+</resources>

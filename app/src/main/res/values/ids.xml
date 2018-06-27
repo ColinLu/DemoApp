@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--界面父控件(所见最低层)ID-->
+    <item name="activity_view" type="id"/>
+    <!--标题-->
+    <item name="toolbar" type="id"/>
+    <item name="layout_title_content" type="id"/>
+    <item name="image_title_back" type="id"/>
+    <item name="text_title_left" type="id"/>
+    <item name="image_title_right" type="id"/>
+    <item name="text_title_right" type="id"/>
+    <item name="text_title_name" type="id"/>
+    <!--刷新控件ID-->
+    <item name="refresh_list" type="id"/>
+    <!--列表控件ID-->
+    <item name="recycler_list" type="id"/>
+    <!--尾布局-->
+    <item name="text_item_foot" type="id"/>
+    <item name="progress_item_foot" type="id"/>
+    <!--空布局-->
+    <item name="layout_list_empty" type="id"/>
+    <item name="image_list_empty" type="id"/>
+    <item name="text_list_empty" type="id"/>
+    <item name="progress_list_empty" type="id"/>
+
+
+</resources>
