@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.colin.demo.app.R;
+import com.colin.demo.app.activity.configuration.ConfigurationActivity;
 import com.colin.demo.app.activity.downloadmanager.DownloadManagerActivity;
 import com.colin.demo.app.adapter.MyFragmentPagerAdapter;
 import com.colin.demo.app.base.BaseActivity;
@@ -183,6 +184,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_share:
                 break;
             case R.id.nav_send:
+                break;
+            case R.id.nav_configuration:
+                startActivity(ConfigurationActivity.class);
                 break;
             default:
                 break;

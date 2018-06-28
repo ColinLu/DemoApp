@@ -1,6 +1,10 @@
 package com.colin.demo.app.data;
 
+import android.os.Environment;
+
 import com.colin.demo.app.R;
+
+import java.io.File;
 
 /**
  * 描述：
@@ -9,9 +13,13 @@ import com.colin.demo.app.R;
  * 时间：2018/6/21
  */
 public abstract class Constants {
+
     public static final int FRAGMENT_MAIN_VIEW = 0;
     public static final int FRAGMENT_MAIN_METHOD = 1;
     public static final int FRAGMENT_MAIN_OTHER = 2;
+    //权限
+    public static final int REQUEST_CODE_PERMISSION_LOCATION = 1;      //定位权限
+
     public static final String[] FRAGMENT_MIAN_TITLE_ARRAY = new String[]{"控件", "方法", "其他"};
 
     public static final Integer[] IMAGE_ARRAY_SHOW = new Integer[]{R.drawable.ic_launcher_background
@@ -34,5 +42,9 @@ public abstract class Constants {
             "http://g.hiphotos.baidu.com/image/h%3D360/sign=e749bf13c45c10383b7ec8c48211931c/2cf5e0fe9925bc315279be915cdf8db1cb137096.jpg",
             "http://h.hiphotos.baidu.com/image/h%3D360/sign=d5eb92930ef431ada3d2453f7b37ac0f/d058ccbf6c81800a7e84fe0fb33533fa828b4749.jpg"
     };
+
+    public static String getFilePath() {
+        return Environment.getExternalStorageDirectory() + File.separator + "DemoApp" + File.separator + "app" + File.separator;
+    }
 
 }

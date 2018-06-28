@@ -368,4 +368,8 @@ public class LogUtil {
             Log.d(tag, "╚═══════════════════════════════════════════════════════════════════════════════════════");
         }
     }
+
+    public static void printStackTrace(Throwable t) {
+        if (IS_SHOW_LOG && t != null) t.printStackTrace();
+    }
 }

@@ -18,18 +18,72 @@
             android:id="@+id/button_download"
             style="@style/ButtonStyle"
             android:text="@string/download"/>
+
         <Button
             android:id="@+id/button_download_progress"
             style="@style/ButtonStyle"
             android:layout_below="@+id/button_download"
-            android:text="下载显示进度"/>
+            android:text="自定义下载"/>
+
         <TextView
             android:id="@+id/text_download_state"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/button_download_progress"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/button_height"
             android:padding="@dimen/margin"
-            android:text="@string/app_name"
             android:textSize="@dimen/text_size"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_down_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_download_state"
+            android:layout_marginTop="10dp"
+            android:padding="@dimen/margin">
+
+            <TextView
+                android:id="@+id/downloadSize"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_10"/>
+
+            <TextView
+                android:id="@+id/netSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:textSize="@dimen/text_10"/>
+
+            <TextView
+                android:id="@+id/tvProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_10"/>
+
+            <com.colin.demo.app.widget.NumberProgressBar
+                android:id="@+id/progress_down_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/netSpeed"
+                android:layout_marginTop="@dimen/margin"
+                app:progress_reached_bar_height="1.5dp"
+                app:progress_reached_color="@color/colorPrimaryDark"
+                app:progress_text_color="@color/colorAccent"
+                app:progress_text_size="@dimen/text_10"
+                app:progress_unreached_bar_height="0.75dp"
+                app:progress_unreached_color="@color/colorPrimary"/>
+
+        </RelativeLayout>
+
+
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

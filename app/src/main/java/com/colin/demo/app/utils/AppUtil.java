@@ -18,12 +18,15 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Looper;
 import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.colin.demo.app.BuildConfig;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -286,6 +289,48 @@ public abstract class AppUtil {
         return fileSizeString;
     }
 
+    /**
+     * 安装app 适配权限7.0
+     *
+     * @param context
+     * @param file
+     */
+    public static void installApk(Context context, File file) {
+        if (null == file) {
+            LogUtil.e("file为空");
+            return;
+        }
+        if (!file.exists() || null == getApkInfo(context, file.getPath())) {
+            ToastUtil.showToast("App安装文件不存在!");
+            return;
+        }
+        Intent install = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            LogUtil.e("高版本版本安装");
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            install.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file), "application/vnd.android.package-archive");
+        } else {
+            LogUtil.e("低版本安装");
+            install.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        }
+        install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(install);
+    }
+
+    /**
+     * 获取apk程序信息[packageName,versionName...]
+     *
+     * @param context Context
+     * @param path    apk path
+     */
+    public static PackageInfo getApkInfo(Context context, String path) {
+        PackageManager pm = context.getPackageManager();
+        PackageInfo info = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+        if (info != null) {
+            return info;
+        }
+        return null;
+    }
 
     /**
      * 设置控件是否可以点击
@@ -373,7 +418,7 @@ public abstract class AppUtil {
         if (null == wifiManager) {
             return "";
         }
-        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+        @SuppressLint("MissingPermission") WifiInfo connectionInfo = wifiManager.getConnectionInfo();
         if (null == connectionInfo) {
             return "";
         }
@@ -392,7 +437,7 @@ public abstract class AppUtil {
         if (null == wifiManager) {
             return "";
         }
-        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+        @SuppressLint("MissingPermission") WifiInfo connectionInfo = wifiManager.getConnectionInfo();
         if (null == connectionInfo) {
             return "";
         }
@@ -413,7 +458,7 @@ public abstract class AppUtil {
         if (null == manager) {
             return "";
         }
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        @SuppressLint("MissingPermission") NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         if (null == networkInfo || !networkInfo.isConnected()) {
             return "";
         }

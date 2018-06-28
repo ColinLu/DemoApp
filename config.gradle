@@ -6,21 +6,26 @@ ext {
             minSdkVersion    : 15,
             targetSdkVersion : 27,
             versionCode      : 1,
-            versionName      : "1.0.0"
+            versionName      : "1.0.0",
+            support          : "27.1.1"
     ]
 
     dependencies = [
-            appcompat       : 'com.android.support:appcompat-v7:27.1.1',
-            supportV4       : 'com.android.support:support-v4:27.1.1',
-            design          : 'com.android.support:design:27.1.1',
-            recyclerview    : 'com.android.support:recyclerview-v7:27.1.1',
-            vectorDrawable  : 'com.android.support:support-vector-drawable:27.1.1',
-            constraint      : 'com.android.support.constraint:constraint-layout:1.1.2',
-            okhttp          : 'com.squareup.okhttp3:okhttp:3.10.0',
-            gson            : 'com.google.code.gson:gson:2.8.1',
+            appcompat      : 'com.android.support:appcompat-v7:27.1.1',
+            supportV4      : 'com.android.support:support-v4:27.1.1',
+            design         : 'com.android.support:design:27.1.1',
+            recyclerview   : 'com.android.support:recyclerview-v7:27.1.1',
+            cardview       : 'com.android.support:cardview-v7:27.1.1',
+            vectorDrawable : 'com.android.support:support-vector-drawable:27.1.1',
+            constraint     : 'com.android.support.constraint:constraint-layout:1.1.2',
+            okhttp         : 'com.squareup.okhttp3:okhttp:3.10.0',
+            gson           : 'com.google.code.gson:gson:2.8.1',
             //图片加载sdk
-            glide           : 'com.github.bumptech.glide:glide:4.7.1',
-
+            glide          : 'com.github.bumptech.glide:glide:4.7.1',
+            //网络请求
+            okgo           : 'com.lzy.net:okgo:3.0.4',
+            //权限
+            easypermissions: 'pub.devrel:easypermissions:1.2.0',
     ]
 
 }
