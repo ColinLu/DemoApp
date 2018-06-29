@@ -7,9 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.colin.demo.app.R;
-import com.colin.demo.app.activity.popupwindow.PopupWindowActivity;
-import com.colin.demo.app.activity.recyclerview.RecyclerViewActivity;
-import com.colin.demo.app.activity.viewpager.ViewPagerActivity;
+import com.colin.demo.app.activity.bluetooth.BluetoothActivity;
 import com.colin.demo.app.adapter.ItemAdapter;
 import com.colin.demo.app.base.BaseAdapter;
 import com.colin.demo.app.base.BaseFragment;
@@ -20,7 +18,7 @@ import com.colin.demo.app.utils.InitViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewFragment extends BaseFragment {
+public class OtherFragment extends BaseFragment {
     private RecyclerView recycler_list;
     private List<ItemBean> mList;
     private ItemAdapter mAdapter;
@@ -35,12 +33,12 @@ public class ViewFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    public ViewFragment() {
+    public OtherFragment() {
 
     }
 
-    public static ViewFragment newInstance(int fragment_id, String fragmentTitle) {
-        ViewFragment fragment = new ViewFragment();
+    public static OtherFragment newInstance(int fragment_id, String fragmentTitle) {
+        OtherFragment fragment = new OtherFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(FRAGMENT_ID, fragment_id);
         bundle.putString(FRAGMENT_TITLE, fragmentTitle);
@@ -138,7 +136,6 @@ public class ViewFragment extends BaseFragment {
                         if (null == object || !(object instanceof ItemBean)) {
                             return;
                         }
-
                         if (null == ((ItemBean) object).clazz) {
                             return;
                         }
@@ -168,13 +165,15 @@ public class ViewFragment extends BaseFragment {
         page = refresh ? 1 : page + 1;
         mList.clear();
 
-        mList.add(new ItemBean(1, "RecyclerView", RecyclerViewActivity.class));
-        mList.add(new ItemBean(2, "ViewPager", ViewPagerActivity.class));
-        mList.add(new ItemBean(3, "PopupWindow", PopupWindowActivity.class));
+        mList.add(new ItemBean(1, "蓝牙技术", BluetoothActivity.class));
 
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_NO);
         mAdapter.setFootState(BaseAdapter.FOOT_STATE_FINISH);
         mAdapter.notifyDataSetChanged();
         refresh_list.setRefreshing(false);
+    }
+
+    private int getIndex(int page, int size, int i) {
+        return (page - 1) * size + i + 1;
     }
 }

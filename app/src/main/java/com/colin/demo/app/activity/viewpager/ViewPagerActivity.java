@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.colin.demo.app.R;
 import com.colin.demo.app.adapter.ImagePagerAdapter;
 import com.colin.demo.app.base.BaseActivity;
+import com.colin.demo.app.bean.ItemBean;
 import com.colin.demo.app.data.Constants;
 import com.colin.demo.app.transformer.AlphaPageTransformer;
 import com.colin.demo.app.transformer.NonPageTransformer;
@@ -26,6 +27,13 @@ public class ViewPagerActivity extends BaseActivity {
     private ViewPager pager_show_alpha;
     private ImagePagerAdapter mAdapter;
     private String title = "RotateDown";
+    private ItemBean mItemBean;
+
+    @Override
+    protected void onDestroy() {
+        mItemBean = null;
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

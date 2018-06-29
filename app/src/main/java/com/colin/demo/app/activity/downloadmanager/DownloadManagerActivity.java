@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.colin.demo.app.R;
 import com.colin.demo.app.base.BaseActivity;
+import com.colin.demo.app.bean.ItemBean;
 import com.colin.demo.app.data.Constants;
 import com.colin.demo.app.download.AppUpdateManager;
 import com.colin.demo.app.download.UpdaterConfig;
@@ -36,6 +37,15 @@ public class DownloadManagerActivity extends BaseActivity {
     private NumberProgressBar progress_down_value;
     private NumberFormat numberFormat;
 
+    private ItemBean mItemBean;
+
+    @Override
+    protected void onDestroy() {
+        mItemBean = null;
+        numberFormat = null;
+        super.onDestroy();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +63,12 @@ public class DownloadManagerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        setTitle(R.string.download);
+        Bundle bundle = getIntent().getExtras();
+        if (null != bundle) {
+            mItemBean = bundle.getParcelable("clazz");
+        }
+
+        setTitle(null == mItemBean ? "" : mItemBean.title);
         numberFormat = NumberFormat.getPercentInstance();
         numberFormat.setMinimumFractionDigits(2);
     }

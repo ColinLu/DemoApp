@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.colin.demo.app.R;
-import com.colin.demo.app.activity.viewpager.ViewPagerActivity;
+import com.colin.demo.app.activity.configuration.ConfigurationActivity;
+import com.colin.demo.app.activity.downloadmanager.DownloadManagerActivity;
+import com.colin.demo.app.activity.touch.TouchActivity;
 import com.colin.demo.app.adapter.ItemAdapter;
 import com.colin.demo.app.base.BaseAdapter;
 import com.colin.demo.app.base.BaseFragment;
@@ -18,7 +20,7 @@ import com.colin.demo.app.utils.InitViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemFragment extends BaseFragment {
+public class MethodFragment extends BaseFragment {
     private RecyclerView recycler_list;
     private List<ItemBean> mList;
     private ItemAdapter mAdapter;
@@ -33,12 +35,12 @@ public class ItemFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    public ItemFragment() {
+    public MethodFragment() {
 
     }
 
-    public static ItemFragment newInstance(int fragment_id, String fragmentTitle) {
-        ItemFragment fragment = new ItemFragment();
+    public static MethodFragment newInstance(int fragment_id, String fragmentTitle) {
+        MethodFragment fragment = new MethodFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(FRAGMENT_ID, fragment_id);
         bundle.putString(FRAGMENT_TITLE, fragmentTitle);
@@ -139,7 +141,9 @@ public class ItemFragment extends BaseFragment {
                         if (null == ((ItemBean) object).clazz) {
                             return;
                         }
-                        startActivity(ViewPagerActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("clazz", ((ItemBean) object));
+                        startActivity(((ItemBean) object).clazz, bundle);
                         break;
                 }
             }
@@ -161,12 +165,12 @@ public class ItemFragment extends BaseFragment {
 
     private void loadData(boolean refresh) {
         page = refresh ? 1 : page + 1;
-        if (refresh) {
-            mList.clear();
-        }
-        for (int i = 0; i < pageSize; i++) {
-            mList.add(new ItemBean(getIndex(page, pageSize, i), "Colin-->>" + String.valueOf(getIndex(page, pageSize, i)), ViewPagerActivity.class));
-        }
+        mList.clear();
+
+        mList.add(new ItemBean(1, "事件分发", TouchActivity.class));
+        mList.add(new ItemBean(2, "APP更新升级", DownloadManagerActivity.class));
+        mList.add(new ItemBean(3, "获取手机配置信息", ConfigurationActivity.class));
+
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_NO);
         mAdapter.setFootState(BaseAdapter.FOOT_STATE_FINISH);
         mAdapter.notifyDataSetChanged();

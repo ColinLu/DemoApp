@@ -77,7 +77,7 @@ public class ItemAdapter extends BaseAdapter<ItemBean> {
     private void setListViewData(BaseViewHolder holder, int position) {
         ItemBean itemBean = mItemList.get(position);
         holder.setText(R.id.text_item_id, String.valueOf(itemBean.id))
-                .setText(R.id.text_item_content, itemBean.content)
+                .setText(R.id.text_item_content, itemBean.title)
                 .setOnClickListener(R.id.layout_item_content, new AdapterClickListener(itemBean, position));
     }
 }

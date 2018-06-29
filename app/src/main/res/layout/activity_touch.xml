@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.colin.demo.app.activity.touch.TouchActivity">
+
+    <include layout="@layout/layout_app_toolbar"/>
+
+    <com.colin.demo.app.activity.touch.TouchViewGroupA
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/colorPrimary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.colin.demo.app.activity.touch.TouchViewGroupB
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@color/colorAccent">
+
+
+            <com.colin.demo.app.activity.touch.TouchView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@color/red"/>
+        </com.colin.demo.app.activity.touch.TouchViewGroupB>
+    </com.colin.demo.app.activity.touch.TouchViewGroupA>
+</android.support.design.widget.CoordinatorLayout>

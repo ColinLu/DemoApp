@@ -3,14 +3,21 @@ package com.colin.demo.app.activity.recyclerview;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.colin.demo.app.R;
+import com.colin.demo.app.base.BaseActivity;
+import com.colin.demo.app.bean.ItemBean;
 
-public class RecyclerViewActivity extends AppCompatActivity {
+public class RecyclerViewActivity extends BaseActivity {
+    private ItemBean mItemBean;
 
+    @Override
+    protected void onDestroy() {
+        mItemBean = null;
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +33,30 @@ public class RecyclerViewActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+        Bundle bundle = getIntent().getExtras();
+        if (null != bundle) {
+            mItemBean = bundle.getParcelable("clazz");
+        }
+
+        setTitle(null == mItemBean ? "" : mItemBean.title);
+    }
+    @Override
+    protected void initListener() {
+
+    }
+
+    @Override
+    protected void initAsync() {
+
     }
 
 }

@@ -19,14 +19,14 @@ public class BottomNavigationTabActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                case R.id.tab_main_view:
+                    mTextMessage.setText(R.string.tab_main_view);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.tab_main_method:
+                    mTextMessage.setText(R.string.tab_main_method);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.tab_main_other:
+                    mTextMessage.setText(R.string.tab_main_other);
                     return true;
             }
             return false;

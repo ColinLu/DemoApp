@@ -5,9 +5,16 @@ import android.view.View;
 
 import com.colin.demo.app.R;
 import com.colin.demo.app.base.BaseActivity;
+import com.colin.demo.app.bean.ItemBean;
 
 public class PopupWindowActivity extends BaseActivity implements View.OnClickListener {
+    private ItemBean mItemBean;
 
+    @Override
+    protected void onDestroy() {
+        mItemBean = null;
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +28,12 @@ public class PopupWindowActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void initData() {
+        Bundle bundle = getIntent().getExtras();
+        if (null != bundle) {
+            mItemBean = bundle.getParcelable("clazz");
+        }
 
+        setTitle(null == mItemBean ? "" : mItemBean.title);
     }
 
     @Override

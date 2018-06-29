@@ -16,6 +16,7 @@
 
     <!--字体大小-->
     <dimen name="text_size">14sp</dimen>
+    <dimen name="text_12">12sp</dimen>
     <dimen name="text_10">10sp</dimen>
 
     <!--线条-->

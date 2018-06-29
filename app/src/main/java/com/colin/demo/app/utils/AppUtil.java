@@ -25,6 +25,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.colin.demo.app.BuildConfig;
 
@@ -196,11 +197,16 @@ public abstract class AppUtil {
      */
     public static boolean isOpenGps(final Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (null == locationManager) {
+            return false;
+        }
         // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
-        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
-        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        return gps || network;
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
+//        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        LogUtil.e("gps------>>" + String.valueOf(gps));
+//        LogUtil.e("network-->>" + String.valueOf(network));
+//        return gps || network;
     }
 
     /**
@@ -683,5 +689,105 @@ public abstract class AppUtil {
         }
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+    }
+
+    /**
+     * 得到WiFi管理者
+     *
+     * @param context
+     * @return
+     */
+    public static WifiManager getWifiManager(Context context) {
+        return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    }
+
+    /**
+     * 打开WIFI
+     */
+
+    public static void openWifi(Context context) {
+        WifiManager mWifiManager = getWifiManager(context);
+        if (null == mWifiManager) {
+            return;
+        }
+        if (!mWifiManager.isWifiEnabled()) {
+            mWifiManager.setWifiEnabled(true);
+        } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
+            Toast.makeText(context, "亲，Wifi正在开启，不用再开了", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "亲，Wifi已经开启,不用再开了", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 关闭WIFI
+    public static void closeWifi(Context context) {
+        WifiManager mWifiManager = getWifiManager(context);
+        if (null == mWifiManager) {
+            return;
+        }
+        if (mWifiManager.isWifiEnabled()) {
+            mWifiManager.setWifiEnabled(false);
+        } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
+            Toast.makeText(context, "亲，Wifi已经关闭，不用再关了", Toast.LENGTH_SHORT).show();
+        } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING) {
+            Toast.makeText(context, "亲，Wifi正在关闭，不用再关了", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "请重新关闭", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 检查当前WIFI状态
+    public static void checkState(Context context) {
+        WifiManager mWifiManager = getWifiManager(context);
+        if (null == mWifiManager) {
+            return;
+        }
+        if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING) {
+            Toast.makeText(context, "Wifi正在关闭", Toast.LENGTH_SHORT).show();
+        } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
+            Toast.makeText(context, "Wifi已经关闭", Toast.LENGTH_SHORT).show();
+        } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
+            Toast.makeText(context, "Wifi正在开启", Toast.LENGTH_SHORT).show();
+        } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
+            Toast.makeText(context, "Wifi已经开启", Toast.LENGTH_SHORT).show();
+        } else {//WifiManager.WIFI_STATE_UNKNOWN
+            Toast.makeText(context, "没有获取到WiFi状态", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 得到当前手机连接的WiFi信息
+     *
+     * @param context
+     * @return
+     */
+    public static WifiInfo getWifiInfo(Context context) {
+        WifiManager wifiManager = getWifiManager(context);
+        if (null == wifiManager) {
+            return null;
+        }
+        return wifiManager.getConnectionInfo();
+    }
+
+    public static TelephonyManager getTelephonyManager(Context context) {
+        return (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    }
+
+    /**
+     * 获取SIM卡运营商
+     *
+     * @param context
+     * @return
+     *
+     */
+    @SuppressLint("MissingPermission,HardwareIds")
+    public static String getOperators(Context context) {
+        TelephonyManager telephonyManager = getTelephonyManager(context);
+        if (null == telephonyManager) {
+            LogUtil.e("telephonyManager 空");
+            return null;
+        }
+        return null;
+
     }
 }

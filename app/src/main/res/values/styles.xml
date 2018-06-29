@@ -103,7 +103,6 @@
     </style>
 
 
-
     <style name="LineHorizontalAllStyle">
         <item name="android:layout_height">@dimen/line_small</item>
         <item name="android:layout_width">match_parent</item>
@@ -130,6 +129,16 @@
         <item name="android:background">@color/app_line_color</item>
         <item name="android:layout_marginTop">@dimen/margin</item>
         <item name="android:layout_marginBottom">@dimen/margin</item>
+    </style>
+
+    <style name="TextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin</item>
+        <item name="android:textColor">@color/color_212121</item>
+        <item name="android:textColorHint">@color/color_999999</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:text">@string/text</item>
     </style>
 
 </resources>

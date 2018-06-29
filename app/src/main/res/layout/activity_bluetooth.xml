@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.colin.demo.app.activity.bluetooth.BluetoothActivity">
+
+    <include layout="@layout/layout_app_toolbar"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:divider="@color/colorAccent"
+            app:showDividers="end">
+
+            <Button
+                android:onClick="scanBluetooth"
+                style="@style/ButtonStyle"
+                android:text="扫描设备"/>
+
+            <Button
+                android:id="@+id/zhendong"
+                style="@style/ButtonStyle"
+                android:text="短震 / 嘿嘿嘿"/>
+
+            <Button
+                android:id="@+id/changzhen"
+                style="@style/ButtonStyle"
+                android:text="长震 / 呵呵呵"/>
+
+            <Button
+                android:id="@+id/buting"
+                style="@style/ButtonStyle"
+                android:text="不要停 / 哈哈哈"/>
+
+            <Button
+                android:id="@+id/tingxia"
+                style="@style/ButtonStyle"
+                android:text="停下来 / ～～"/>
+
+            <TextView
+                android:id="@+id/jibu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/margin"
+                android:text="走了多少步："
+                android:textSize="@dimen/text_size"/>
+
+
+            <TextView
+                android:id="@+id/dianliang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/margin"
+                android:text="电池电量"
+                android:textSize="@dimen/text_size"/>
+
+            <TextView
+                android:id="@+id/lianjiezhuangtai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/margin"
+                android:text="连接状态：未连接"
+                android:textSize="@dimen/text_size"/>
+
+            <android.support.v7.widget.RecyclerView
+                style="@style/RecyclerStyle"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:ignore="UnusedAttribute"/>
+        </android.support.v7.widget.LinearLayoutCompat>
+
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

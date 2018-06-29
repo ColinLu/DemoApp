@@ -27,7 +27,8 @@ public abstract class Constants {
             , R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background};
 
 
-    public static final int REQUEST_CODE_INSTALL = 0;
+    public static final int REQUEST_CODE_INSTALL = 0;               //安装app
+    public static final int REQUEST_CODE_OPEN_BLUETOOTH = 1;        //打开蓝牙
 
     //十张图片网址
     public static final String[] IMAGE_URL = new String[]{

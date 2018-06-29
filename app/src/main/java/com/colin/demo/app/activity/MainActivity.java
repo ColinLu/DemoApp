@@ -22,7 +22,8 @@ import com.colin.demo.app.callback.MyOnPageChangeListener;
 import com.colin.demo.app.callback.OnFragmentListener;
 import com.colin.demo.app.data.Constants;
 import com.colin.demo.app.effect.DepthPageTransformer;
-import com.colin.demo.app.fragment.ItemFragment;
+import com.colin.demo.app.fragment.OtherFragment;
+import com.colin.demo.app.fragment.MethodFragment;
 import com.colin.demo.app.fragment.ViewFragment;
 
 import java.util.ArrayList;
@@ -78,8 +79,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (null == mList) {
             mList = new ArrayList<>();
             mList.add(ViewFragment.newInstance(Constants.FRAGMENT_MAIN_VIEW, Constants.FRAGMENT_MIAN_TITLE_ARRAY[Constants.FRAGMENT_MAIN_VIEW]));
-            mList.add(ItemFragment.newInstance(Constants.FRAGMENT_MAIN_METHOD, Constants.FRAGMENT_MIAN_TITLE_ARRAY[Constants.FRAGMENT_MAIN_METHOD]));
-            mList.add(ItemFragment.newInstance(Constants.FRAGMENT_MAIN_OTHER, Constants.FRAGMENT_MIAN_TITLE_ARRAY[Constants.FRAGMENT_MAIN_OTHER]));
+            mList.add(MethodFragment.newInstance(Constants.FRAGMENT_MAIN_METHOD, Constants.FRAGMENT_MIAN_TITLE_ARRAY[Constants.FRAGMENT_MAIN_METHOD]));
+            mList.add(OtherFragment.newInstance(Constants.FRAGMENT_MAIN_OTHER, Constants.FRAGMENT_MIAN_TITLE_ARRAY[Constants.FRAGMENT_MAIN_OTHER]));
         }
 
         if (null == mAdapter) {
@@ -114,13 +115,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_home:
+                    case R.id.tab_main_view:
                         selectPager(Constants.FRAGMENT_MAIN_VIEW);
                         return true;
-                    case R.id.navigation_dashboard:
+                    case R.id.tab_main_method:
                         selectPager(Constants.FRAGMENT_MAIN_METHOD);
                         return true;
-                    case R.id.navigation_notifications:
+                    case R.id.tab_main_other:
                         selectPager(Constants.FRAGMENT_MAIN_OTHER);
                         return true;
                     default:
