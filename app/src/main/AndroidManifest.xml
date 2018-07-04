@@ -3,8 +3,25 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.colin.demo.app">
 
+    <!-- Required to access Google Play Licensing -->
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+
+    <!-- Required to download files from Google Play -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!--获取网络状态-->
+
+    <!-- Required to keep CPU alive while downloading files (NOT to keep screen awake) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- Required to poll the state of the network connection and respond to changes -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!-- Required to check whether Wi-Fi is enabled -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <!-- Required to read and write the expansion files on shared storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 获取网络状态 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
@@ -15,16 +32,17 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <!-- 定位权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!--蓝牙权限-->
+    <!-- 蓝牙权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <!--除了蓝牙权限外，如果需要BLE feature则还需要声明uses-feature：-->
+    <!-- 除了蓝牙权限外，如果需要BLE feature则还需要声明uses-feature： -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true"/>
 
-    <!--读取手机信息-->
+    <!-- 读取手机信息 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
     <application
         android:name=".base.AppApplication"
         android:allowBackup="true"
@@ -85,6 +103,21 @@
         <activity android:name=".activity.touch.TouchActivity">
         </activity>
         <activity android:name=".activity.bluetooth.BluetoothActivity">
+        </activity>
+        <activity android:name=".activity.configuration.SystemActivity">
+        </activity>
+        <activity android:name=".activity.downloadmanager.DownloaderActivity">
+        </activity>
+        <activity android:name=".activity.service.ServiceActivity">
+        </activity>
+
+        <service
+            android:name=".service.BinderService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <activity android:name=".activity.constraintlayout.ConstraintLayoutActivity">
         </activity>
     </application>
 

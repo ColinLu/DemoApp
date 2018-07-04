@@ -67,7 +67,6 @@ android {
 //签名打包输入路径与app输入名字
 def generateApk(variant) {
     if (variant.buildType.name == "release") {
-        variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/app/outputs")
         variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
 //            apkData.outputFileName = "fenqi_release_${getTime()}.apk"
             apkData.outputFileName = "demo_release.apk"
@@ -80,12 +79,11 @@ static def getTime() {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-
     implementation librarys.appcompat
     implementation librarys.supportV4
     implementation librarys.design
@@ -97,5 +95,6 @@ dependencies {
     implementation librarys.okhttp
     implementation librarys.gson
     implementation librarys.okgo
-
+    implementation project(':DownloaderLibrary')
+    implementation project(path: ':GooglePlayLicenseLibrary')
 }

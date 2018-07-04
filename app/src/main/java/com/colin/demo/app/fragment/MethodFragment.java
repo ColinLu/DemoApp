@@ -8,7 +8,9 @@ import android.view.View;
 
 import com.colin.demo.app.R;
 import com.colin.demo.app.activity.configuration.ConfigurationActivity;
+import com.colin.demo.app.activity.configuration.SystemActivity;
 import com.colin.demo.app.activity.downloadmanager.DownloadManagerActivity;
+import com.colin.demo.app.activity.downloadmanager.DownloaderActivity;
 import com.colin.demo.app.activity.touch.TouchActivity;
 import com.colin.demo.app.adapter.ItemAdapter;
 import com.colin.demo.app.base.BaseAdapter;
@@ -168,8 +170,10 @@ public class MethodFragment extends BaseFragment {
         mList.clear();
 
         mList.add(new ItemBean(1, "事件分发", TouchActivity.class));
-        mList.add(new ItemBean(2, "APP更新升级", DownloadManagerActivity.class));
-        mList.add(new ItemBean(3, "获取手机配置信息", ConfigurationActivity.class));
+        mList.add(new ItemBean(2, "下载服务", DownloaderActivity.class));
+        mList.add(new ItemBean(3, "APP更新升级", DownloadManagerActivity.class));
+        mList.add(new ItemBean(4, "获取手机配置信息", ConfigurationActivity.class));
+        mList.add(new ItemBean(6, "手机系统配置信息", SystemActivity.class));
 
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_NO);
         mAdapter.setFootState(BaseAdapter.FOOT_STATE_FINISH);

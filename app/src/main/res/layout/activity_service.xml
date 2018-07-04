@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.colin.demo.app.activity.service.ServiceActivity">
+
+    <include layout="@layout/layout_app_toolbar"/>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:divider="@color/color_999999"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:showDividers="end|middle">
+
+        <Button
+            android:id="@+id/button_service_start"
+            style="@style/ButtonStyle"
+            android:text="Start Service"/>
+
+        <Button
+            android:id="@+id/button_service_stop"
+            style="@style/ButtonStyle"
+            android:text="Stop Service"/>
+
+        <Button
+            android:id="@+id/button_service_bind"
+            style="@style/ButtonStyle"
+            android:text="Bind Service"/>
+
+        <Button
+            android:id="@+id/button_service_unbind"
+            style="@style/ButtonStyle"
+            android:text="UnBind Service"/>
+
+        <Button
+            android:id="@+id/button_service_bind_remote"
+            style="@style/ButtonStyle"
+            android:text="Bind RemoteService"/>
+
+        <Button
+            android:id="@+id/button_service_unbind_remote"
+            style="@style/ButtonStyle"
+            android:text="UnBind RemoteService"/>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.design.widget.CoordinatorLayout>

@@ -204,4 +204,9 @@
         141.android.permission.ACCESS_COARSE_LOCATION 允许程序通过WiFi或移动基站的方式获取用户错略的经纬度信息
         142.android.permission.ACCESS_CHECKIN_PROPERTIES 允许程序读取或写入登记check-in数据库属性表的权限
     </string>
+    <string name="spread">spread</string>
+    <string name="packed">packed</string>
+    <string name="spread_inside">spread_inside</string>
+    <string name="spread_weight">spread+weight</string>
+    <string name="packed_bias">packed_bias</string>
 </resources>
