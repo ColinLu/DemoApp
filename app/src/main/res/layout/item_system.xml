@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:id="@+id/layout_item_content"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="@drawable/shape_ffffff"
+                                             android:minHeight="@dimen/item_height">
+
+
+    <TextView
+        android:id="@+id/text_item_title"
+        style="@style/ItemLabel"
+        android:text="@string/app_name"/>
+
+    <TextView
+        android:id="@+id/text_item_value"
+        style="@style/ItemValue"
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toRightOf="@+id/text_item_title"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+        style="@style/LineHorizontalStyle"
+        app:layout_constraintTop_toBottomOf="@+id/text_item_value"/>
+</android.support.constraint.ConstraintLayout>

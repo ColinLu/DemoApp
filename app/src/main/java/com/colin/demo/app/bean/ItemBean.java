@@ -13,11 +13,19 @@ import android.os.Parcelable;
 public class ItemBean extends Object implements Parcelable {
     public int id;
     public String title;
+    public String value;
+    public String description;
     public Class<? extends Activity> clazz;
 
     public ItemBean(int id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    public ItemBean(String title, String value,String description) {
+        this.title = title;
+        this.value = value;
+        this.description = description;
     }
 
     public ItemBean(int id, String title, Class<? extends Activity> clazz) {
@@ -29,12 +37,16 @@ public class ItemBean extends Object implements Parcelable {
     protected ItemBean(Parcel in) {
         id = in.readInt();
         title = in.readString();
+        value = in.readString();
+        description = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(title);
+        dest.writeString(value);
+        dest.writeString(description);
     }
 
     @Override

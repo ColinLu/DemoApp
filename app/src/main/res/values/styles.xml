@@ -141,27 +141,40 @@
         <item name="android:text">@string/text</item>
     </style>
 
-    <style name="Item">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="Item.Layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dip</item>
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="Item.Label">
+    <style name="ItemLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-
+        <item name="android:background">@drawable/shape_ffffff</item>
+        <item name="android:minHeight">@dimen/item_height</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="Item.Edit">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginLeft">120dip</item>
-        <item name="android:layout_marginRight">100dip</item>
+    <style name="ItemLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:minWidth">100dp</item>
+        <item name="android:paddingBottom">@dimen/line_big</item>
+        <item name="android:paddingLeft">@dimen/margin</item>
+        <item name="android:paddingRight">@dimen/margin</item>
+        <item name="android:paddingTop">@dimen/line_big</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/color_212121</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
 
+    <style name="ItemValue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">@dimen/item_height</item>
+        <item name="android:paddingBottom">@dimen/line_big</item>
+        <item name="android:paddingLeft">@dimen/margin</item>
+        <item name="android:paddingRight">@dimen/margin</item>
+        <item name="android:paddingTop">@dimen/line_big</item>
+        <item name="android:textColor">@color/color_333333</item>
+        <item name="android:textSize">@dimen/text_size</item>
     </style>
 </resources>

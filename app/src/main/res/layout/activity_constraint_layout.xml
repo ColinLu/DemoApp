@@ -46,18 +46,24 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@mipmap/ic_launcher"/>
 
-
+            <android.support.constraint.Group
+                android:id="@+id/group_constraint_view_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="image_size_ratio_w,text_size_ratio_w"/>
             <!--指定高度，宽度随着宽高比自适应 -->
             <!--app:layout_constraintDimensionRatio="16:9"  W: 默认，表示宽高比-->
             <ImageView
                 android:id="@+id/image_size_ratio_w"
                 android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_marginTop="?attr/actionBarSize"
                 android:contentDescription="@string/state_failed"
                 android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="W,16:9"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/save"
+                app:layout_constraintTop_toBottomOf="@+id/merge_constrain_placeholder"
                 app:srcCompat="@drawable/ic_launcher_background"
                 tools:ignore="UnknownIdInLayout"/>
 
@@ -65,7 +71,7 @@
                 android:id="@+id/text_size_ratio_w"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="?attr/actionBarSize"
                 android:textColor="@color/color_212121"
                 android:textSize="@dimen/text_size"
                 app:layout_constraintBottom_toBottomOf="@+id/image_size_ratio_w"
