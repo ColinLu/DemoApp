@@ -83,7 +83,7 @@ public class SystemAdapter extends BaseAdapter<ItemBean> {
     private void setListViewData(BaseViewHolder holder, int position) {
         ItemBean itemBean = mItemList.get(position);
         holder.setText(R.id.text_item_title, itemBean.title)
-                .setText(R.id.text_item_value, StringUtil.isEmpty(itemBean.value) ? "" : itemBean.value)
+                .setText(R.id.text_item_value, StringUtil.isEmpty(itemBean.value) ? "取值失败" : itemBean.value)
                 .setOnClickListener(R.id.layout_item_content, new AdapterClickListener(itemBean, position));
     }
 }

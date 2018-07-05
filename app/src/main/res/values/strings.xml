@@ -49,6 +49,7 @@
     <string name="system_download_component_disable">下载服务不可用,请您启用</string>
     <string name="system_download_description">版本更新</string>
     <string name="title_activity_configuration">手机配置信息</string>
+    <string name="version_codes_error_format">手机Android版本必须大于等于%d</string>
     <string name="large_text">
        整个权限里,可以分为系统权限和特殊权限授权。
         \n系统权限中,又分为normal和dangerous类型。

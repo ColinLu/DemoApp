@@ -1,16 +1,18 @@
 package com.colin.demo.app.activity.configuration;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -22,9 +24,12 @@ import com.colin.demo.app.base.BaseActivity;
 import com.colin.demo.app.bean.ItemBean;
 import com.colin.demo.app.callback.OnRecyclerItemClickListener;
 import com.colin.demo.app.dialog.DialogTips;
+import com.colin.demo.app.manager.BlueManager;
+import com.colin.demo.app.manager.NetworkManager;
 import com.colin.demo.app.utils.AppUtil;
 import com.colin.demo.app.utils.InitViewUtil;
 import com.colin.demo.app.utils.PermissionUtil;
+import com.colin.demo.app.utils.StringUtil;
 import com.colin.demo.app.utils.TimeUtil;
 import com.colin.demo.app.utils.ToastUtil;
 
@@ -127,7 +132,11 @@ public class SystemActivity extends BaseActivity {
                 if (null == object || !(object instanceof ItemBean)) {
                     return;
                 }
-                new DialogTips(SystemActivity.this).setMessage(((ItemBean) object).description).show();
+                ItemBean itemBean = (ItemBean) object;
+                if (StringUtil.isEmpty(itemBean.description)) {
+                    return;
+                }
+                new DialogTips(SystemActivity.this).setMessage(itemBean.description).show();
             }
         });
     }
@@ -211,7 +220,7 @@ public class SystemActivity extends BaseActivity {
      *
      * @param refresh
      */
-    @SuppressLint({"MissingPermission", "HardwareIds"})
+    @SuppressLint({"MissingPermission", "HardwareIds", "DefaultLocale"})
     private void loadData(boolean refresh) {
         if (null != refresh_list && refresh_list.isRefreshing()) {
             refresh_list.setRefreshing(false);
@@ -239,8 +248,11 @@ public class SystemActivity extends BaseActivity {
         mList.add(new ItemBean("设备类型", Build.TYPE, "The type of build, like \"user\" or \"eng\"."));
         mList.add(new ItemBean("描述build的标签", Build.TAGS, "Comma-separated tags describing the build, like \"unsigned,debug\"."));
         mList.add(new ItemBean("串口序列号", Build.SERIAL, "被getSerial()方法替代"));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mList.add(new ItemBean("串口序列号", Build.getSerial(), "方法获取需要权限--READ_PHONE_STATE"));
+        } else {
+            mList.add(new ItemBean("串口序列号", getString(R.string.version_codes_error_format, Build.VERSION_CODES.O), "方法获取需要权限--READ_PHONE_STATE"));
         }
 
         mList.add(new ItemBean("品牌", Build.BRAND, "品牌手机如果有的话就有值"));
@@ -252,11 +264,25 @@ public class SystemActivity extends BaseActivity {
         mList.add(new ItemBean("固件版本", Build.getRadioVersion(), "The radio firmware version number. getRadioVersion} instead"));
 
         mList.add(new ItemBean("系统启动程序版本号", Build.BOOTLOADER, "The system bootloader version number."));
+        mList.add(new ItemBean("CPU名称", getCpuName(), ""));
         mList.add(new ItemBean("cpu指令集1", Build.CPU_ABI, "{@link #SUPPORTED_ABIS} instead"));
         mList.add(new ItemBean("cpu指令集2", Build.CPU_ABI2, "{@link #SUPPORTED_ABIS} instead"));
-        mList.add(new ItemBean("cpu指令集", arrayToString(Build.SUPPORTED_ABIS), "{@link #SUPPORTED_ABIS} instead"));
-        mList.add(new ItemBean("cpu指令集32", arrayToString(Build.SUPPORTED_32_BIT_ABIS), "{@link #SUPPORTED_ABIS} instead"));
-        mList.add(new ItemBean("cpu指令集64", arrayToString(Build.SUPPORTED_64_BIT_ABIS), "{@link #SUPPORTED_ABIS} instead"));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mList.add(new ItemBean("cpu指令集", arrayToString(Build.SUPPORTED_ABIS), "{@link #SUPPORTED_ABIS} instead"));
+        } else {
+            mList.add(new ItemBean("cpu指令集", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "{@link #SUPPORTED_ABIS} instead"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mList.add(new ItemBean("cpu指令集32", arrayToString(Build.SUPPORTED_32_BIT_ABIS), "{@link #SUPPORTED_ABIS} instead"));
+        } else {
+            mList.add(new ItemBean("cpu指令集32", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "{@link #SUPPORTED_ABIS} instead"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mList.add(new ItemBean("cpu指令集64", arrayToString(Build.SUPPORTED_64_BIT_ABIS), "{@link #SUPPORTED_ABIS} instead"));
+        } else {
+            mList.add(new ItemBean("cpu指令集64", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "{@link #SUPPORTED_ABIS} instead"));
+        }
 
         mList.add(new ItemBean("主板", Build.BOARD, "The name of the underlying board, like \"goldfish\"."));
         mList.add(new ItemBean("版本型号", Build.MODEL, "The end-user-visible name for the end product. "));
@@ -278,78 +304,197 @@ public class SystemActivity extends BaseActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mList.add(new ItemBean("VERSION_PATCH", Build.VERSION.SECURITY_PATCH, "The user-visible security patch level."));
+        } else {
+            mList.add(new ItemBean("VERSION_PATCH", getString(R.string.version_codes_error_format, Build.VERSION_CODES.M), "The user-visible security patch level."));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mList.add(new ItemBean("VERSION_BASE_OS", Build.VERSION.BASE_OS, "The base OS build the product is based on."));
+        } else {
+            mList.add(new ItemBean("VERSION_BASE_OS", getString(R.string.version_codes_error_format, Build.VERSION_CODES.M), "The base OS build the product is based on."));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mList.add(new ItemBean("系统版本值", String.valueOf(Build.VERSION.PREVIEW_SDK_INT), "The developer preview revision of a prerelease SDK. This value will always be <code>0</code> on production platform builds/devices."));
+        } else {
+            mList.add(new ItemBean("系统版本值", getString(R.string.version_codes_error_format, Build.VERSION_CODES.M), "The developer preview revision of a prerelease SDK. This value will always be <code>0</code> on production platform builds/devices."));
         }
         mList.add(new ItemBean("系统版本值", String.valueOf(Build.VERSION.SDK_INT), "The user-visible SDK version of the framework; its possible values are defined in {@link Build.VERSION_CODES}"));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mList.add(new ItemBean("系统版本值", String.valueOf(Build.VERSION.PREVIEW_SDK_INT), "  * The developer preview revision of a prerelease SDK. This value will always be <code>0</code> on production platform builds/devices."));
-        }
         ///////////////////////////////////////////////////Build取值结束///////////////////////////////////////////////////////////////////
 
         //最好获取权限 READ_PHONE_STATE
         //https://blog.csdn.net/perArther/article/details/51772561
         ///////////////////////////////////////////////////手机取值开始///////////////////////////////////////////////////////////////////
-        TelephonyManager phone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (null != phone) {
-
-            mList.add(new ItemBean("移动终端的唯一标识", phone.getDeviceId(), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
-            mList.add(new ItemBean("GSM手机的IMSI", phone.getSubscriberId(), "Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return null if it is unavailable."));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mList.add(new ItemBean("移动终端的唯一标识", phone.getImei(), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mList.add(new ItemBean("移动终端的唯一标识", phone.getMeid(), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
-            }
-            mList.add(new ItemBean("移动终端的软件版本", phone.getDeviceSoftwareVersion(), "返回移动终端的软件版本，例如：GSM手机的IMEI/SV码"));
-            mList.add(new ItemBean("GSM手机的一组标识符", phone.getGroupIdLevel1(), "Returns the Group Identifier Level1 for a GSM phone. Return null if it is unavailable"));
-            mList.add(new ItemBean("短信代理商的URL", phone.getMmsUAProfUrl(), "the MMS user agent profile URL"));
-            mList.add(new ItemBean("ISO标准的国家码", phone.getNetworkCountryIso(), "Returns the ISO country code equivalent of the current registered operator's MCC (Mobile Country Code)"));
-            mList.add(new ItemBean("电话类型", getPhoneType(phone.getPhoneType()), "Returns the ISO country code equivalent of the current registered operator's MCC (Mobile Country Code)"));
-
-            mList.add(new ItemBean("MCC+MNC代码", phone.getNetworkOperator(), "(SIM卡运营商国家代码和运营商网络代码)(IMSI);Returns the numeric name (MCC+MNC) of current registered operator."));
-
-            mList.add(new ItemBean("移动网络运营商", phone.getNetworkOperatorName(), "Returns the alphabetic name of current registered operator."));
-            mList.add(new ItemBean("CC+SIM卡运营商的名称", phone.getSimOperatorName(), "Returns the Service Provider Name (SPN)."));
-            mList.add(new ItemBean("CC+MNC代码", phone.getSimOperator(), "Returns the MCC+MNC (mobile country code + mobile network code) of the provider of the SIM. 5 or 6 decimal digits."));
-            mList.add(new ItemBean("SIM卡的状态", getSimState(phone.getSimState()), "Returns the alphabetic name of current registered operator."));
-            mList.add(new ItemBean("获取网络类型", getNetworkType(phone.getNetworkType()), "Returns the ISO country code equivalent of the current registered operator's MCC (Mobile Country Code) of a subscription."));
-
-            mList.add(new ItemBean("CC+SIM卡运营商的国家代码", phone.getSimCountryIso(), "Returns the ISO country code equivalent for the SIM provider's country code."));
-            mList.add(new ItemBean("SIM卡的序号", phone.getSimSerialNumber(), "Returns the serial number of the SIM, if applicable. Return null if it is unavailable."));
-            mList.add(new ItemBean("语音信箱的检索字母标识符", phone.getVoiceMailAlphaTag(), " Retrieves the alphabetic identifier associated with the voice mail number."));
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
 
-            mList.add(new ItemBean("获取设备的当前位置", phone.getCellLocation().toString(), "#getAllCellInfo} instead"));
-            //ACCESS_COARSE_LOCATION
-            mList.add(new ItemBean("cellInfos", listToString(phone.getAllCellInfo()), "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available."));
-            mList.add(new ItemBean("手机号码", phone.getLine1Number(), "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available."));
-            mList.add(new ItemBean("IMSI", phone.getSubscriberId(), "Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return null if it is unavailable."));
-            mList.add(new ItemBean("数据活动状态", getPhoneActivityState(phone.getDataActivity()), "Returns a constant indicating the type of activity on a data connection"));
-            mList.add(new ItemBean("数据连接状态", getPhoneDataState(phone.getDataState()), "Returns a constant indicating the type of activity on a data connection"));
+        mList.add(new ItemBean("DeviceId", null == telephonyManager ? "" : telephonyManager.getDeviceId(), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
+        mList.add(new ItemBean("SubscriberId", null == telephonyManager ? "" : telephonyManager.getSubscriberId(), "Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return null if it is unavailable."));
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mList.add(new ItemBean("移动终端的唯一标识", null == telephonyManager ? "" : telephonyManager.getImei(), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
+        } else {
+            mList.add(new ItemBean("移动终端的唯一标识", getString(R.string.version_codes_error_format, Build.VERSION_CODES.O), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mList.add(new ItemBean("移动终端的唯一标识", null == telephonyManager ? "" : telephonyManager.getMeid(), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
+        } else {
+            mList.add(new ItemBean("移动终端的唯一标识", getString(R.string.version_codes_error_format, Build.VERSION_CODES.O), "Returns the unique device ID, for example, the IMEI for GSM and the MEID or ESN for CDMA phones. Return null if device ID is not available."));
+        }
+        mList.add(new ItemBean("移动终端的软件版本", null == telephonyManager ? "" : telephonyManager.getDeviceSoftwareVersion(), "返回移动终端的软件版本，例如：GSM手机的IMEI/SV码"));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            mList.add(new ItemBean("GSM手机的一组标识符", null == telephonyManager ? "" : telephonyManager.getGroupIdLevel1(), "Returns the Group Identifier Level1 for a GSM phone. Return null if it is unavailable"));
+        } else {
+            mList.add(new ItemBean("GSM手机的一组标识符", getString(R.string.version_codes_error_format, Build.VERSION_CODES.O), "Returns the Group Identifier Level1 for a GSM phone. Return null if it is unavailable"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mList.add(new ItemBean("短信代理商的URL", null == telephonyManager ? "" : telephonyManager.getMmsUAProfUrl(), "the MMS user agent profile URL"));
+        } else {
+            mList.add(new ItemBean("短信代理商的URL", getString(R.string.version_codes_error_format, Build.VERSION_CODES.O), "the MMS user agent profile URL"));
+        }
+        mList.add(new ItemBean("ISO标准的国家码", null == telephonyManager ? "" : telephonyManager.getNetworkCountryIso(), "Returns the ISO country code equivalent of the current registered operator's MCC (Mobile Country Code)"));
+        mList.add(new ItemBean("电话类型", getPhoneType(null == telephonyManager ? TelephonyManager.PHONE_TYPE_NONE : telephonyManager.getPhoneType()), "Returns the ISO country code equivalent of the current registered operator's MCC (Mobile Country Code)"));
+
+        mList.add(new ItemBean("MCC+MNC代码", null == telephonyManager ? "" : telephonyManager.getNetworkOperator(), "(SIM卡运营商国家代码和运营商网络代码)(IMSI);Returns the numeric name (MCC+MNC) of current registered operator."));
+
+        mList.add(new ItemBean("移动网络运营商", null == telephonyManager ? "" : telephonyManager.getNetworkOperatorName(), "Returns the alphabetic name of current registered operator."));
+        mList.add(new ItemBean("CC+SIM卡运营商的名称", null == telephonyManager ? "" : telephonyManager.getSimOperatorName(), "Returns the Service Provider Name (SPN)."));
+        mList.add(new ItemBean("CC+MNC代码", null == telephonyManager ? "" : telephonyManager.getSimOperator(), "Returns the MCC+MNC (mobile country code + mobile network code) of the provider of the SIM. 5 or 6 decimal digits."));
+        mList.add(new ItemBean("SIM卡的状态", getSimState(null == telephonyManager ? TelephonyManager.SIM_STATE_UNKNOWN : telephonyManager.getSimState()), "Returns the alphabetic name of current registered operator."));
+        mList.add(new ItemBean("获取网络类型", getNetworkType(null == telephonyManager ? TelephonyManager.NETWORK_TYPE_UNKNOWN : telephonyManager.getNetworkType()), "Returns the ISO country code equivalent of the current registered operator's MCC (Mobile Country Code) of a subscription."));
+
+        mList.add(new ItemBean("CC+SIM卡运营商的国家代码", null == telephonyManager ? "" : telephonyManager.getSimCountryIso(), "Returns the ISO country code equivalent for the SIM provider's country code."));
+        mList.add(new ItemBean("SIM卡的序号", null == telephonyManager ? "" : telephonyManager.getSimSerialNumber(), "Returns the serial number of the SIM, if applicable. Return null if it is unavailable."));
+        mList.add(new ItemBean("语音信箱的检索字母标识符", null == telephonyManager ? "" : telephonyManager.getVoiceMailAlphaTag(), " Retrieves the alphabetic identifier associated with the voice mail number."));
+
+
+        mList.add(new ItemBean("获取设备的当前位置", null == telephonyManager ? "" : telephonyManager.getCellLocation().toString(), "#getAllCellInfo} instead"));
+        //ACCESS_COARSE_LOCATION
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mList.add(new ItemBean("AllCellInfo", listToString(null == telephonyManager ? null : telephonyManager.getAllCellInfo()), "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available."));
+        } else {
+            mList.add(new ItemBean("AllCellInfo", getString(R.string.version_codes_error_format, Build.VERSION_CODES.JELLY_BEAN_MR1), "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available."));
+        }
+        mList.add(new ItemBean("手机号码", null == telephonyManager ? "" : telephonyManager.getLine1Number(), "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available."));
+        mList.add(new ItemBean("IMSI", null == telephonyManager ? "" : telephonyManager.getSubscriberId(), "Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return null if it is unavailable."));
+        mList.add(new ItemBean("数据活动状态", getPhoneActivityState(null == telephonyManager ? TelephonyManager.DATA_ACTIVITY_NONE : telephonyManager.getDataActivity()), "Returns a constant indicating the type of activity on a data connection"));
+        mList.add(new ItemBean("数据连接状态", getPhoneDataState(null == telephonyManager ? -1 : telephonyManager.getDataState()), "Returns a constant indicating the type of activity on a data connection"));
+
+
         ///////////////////////////////////////////////////手机取值结束///////////////////////////////////////////////////////////////////
         //https://blog.csdn.net/jdsjlzx/article/details/40740543
-        @SuppressLint("WifiManagerLeak") WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        //https://www.jianshu.com/p/67aaf1fdb921
+        @SuppressLint("WifiManagerLeak") WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null != wifi) {
+            mList.add(new ItemBean("WiFi是否打开", String.valueOf(wifi.isWifiEnabled()), ""));
+            mList.add(new ItemBean("WiFi状态", getWifiState(wifi.getWifiState()), ""));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mList.add(new ItemBean("是否支持5GWifi", String.valueOf(wifi.is5GHzBandSupported()), ""));
+            } else {
+                mList.add(new ItemBean("是否支持5GWifi", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mList.add(new ItemBean("isDeviceToApRttSupported", String.valueOf(wifi.isDeviceToApRttSupported()), ""));
+            } else {
+                mList.add(new ItemBean("isDeviceToApRttSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mList.add(new ItemBean("isEnhancedPowerReportingSupported", String.valueOf(wifi.isEnhancedPowerReportingSupported()), ""));
+            } else {
+                mList.add(new ItemBean("isEnhancedPowerReportingSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mList.add(new ItemBean("isP2pSupported", String.valueOf(wifi.isP2pSupported()), ""));
+            } else {
+                mList.add(new ItemBean("isP2pSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mList.add(new ItemBean("isPreferredNetworkOffloadSupported", String.valueOf(wifi.isPreferredNetworkOffloadSupported()), ""));
+            } else {
+                mList.add(new ItemBean("isPreferredNetworkOffloadSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                mList.add(new ItemBean("isScanAlwaysAvailable", String.valueOf(wifi.isScanAlwaysAvailable()), ""));
+            } else {
+                mList.add(new ItemBean("isScanAlwaysAvailable", getString(R.string.version_codes_error_format, Build.VERSION_CODES.JELLY_BEAN_MR2), ""));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mList.add(new ItemBean("isTdlsSupported", String.valueOf(wifi.isTdlsSupported()), ""));
+            } else {
+                mList.add(new ItemBean("isTdlsSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+            }
 
+            mList.add(new ItemBean("WiFiDHCP的信息", wifi.getDhcpInfo().toString(), ""));
+            mList.add(new ItemBean("网络连接的状态", listToString(wifi.getConfiguredNetworks()), ""));
+        } else {
+            mList.add(new ItemBean("WiFi", "不支持WiFi", ""));
+        }
+        //用于描述已经链接的Wifi的信息
         if (null != wifi && null != wifi.getConnectionInfo()) {
-            WifiInfo connectionInfo = wifi.getConnectionInfo();
-            mList.add(new ItemBean("WifiMac地址", connectionInfo.getMacAddress(), "Returns a constant indicating the type of activity on a data connection"));
+            WifiInfo wifiInfo = wifi.getConnectionInfo();
+            mList.add(new ItemBean("IP地址", String.valueOf(wifiInfo.getIpAddress()), ""));
+            mList.add(new ItemBean("Mac地址", wifiInfo.getMacAddress(), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("SSID是否被隐藏", String.valueOf(wifiInfo.getHiddenSSID()), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("BSSID", wifiInfo.getBSSID(), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("SSID信息", wifiInfo.getSSID(), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("链接的速度", String.valueOf(wifiInfo.getLinkSpeed()), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("WiFi强度", String.valueOf(wifiInfo.getRssi()), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("getNetworkId", String.valueOf(wifiInfo.getNetworkId()), "Returns a constant indicating the type of activity on a data connection"));
+            mList.add(new ItemBean("网络链接的状态", wifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState()).toString(), "Returns a constant indicating the type of activity on a data connection"));
+        } else if (null != wifi && null == wifi.getConnectionInfo()) {
+            mList.add(new ItemBean("WiFi连接", "未连接", ""));
         }
 
+        //获取网络的状态信息，有下面三种方式
+        NetworkInfo networkInfo = NetworkManager.getInstance().getNetworkInfo(this);
+        if (null != networkInfo) {
+            mList.add(new ItemBean("网络是否有效", String.valueOf(networkInfo.isAvailable()), ""));
+            mList.add(new ItemBean("网络是否连接", String.valueOf(networkInfo.isConnected()), ""));
+            mList.add(new ItemBean("网络类型", String.valueOf(networkInfo.getType()), ""));
+            mList.add(new ItemBean("网络类型的名", networkInfo.getTypeName(), ""));
+            mList.add(new ItemBean("精确的网络状态", NetworkManager.getInstance().getDetailedState(this).name(), ""));
+            mList.add(new ItemBean("粗略的网络状态", NetworkManager.getInstance().getState(this).name(), ""));
+            mList.add(new ItemBean("networkInfo", networkInfo.toString(), ""));
+        } else {
+            mList.add(new ItemBean("网络连接", "未连接网络", ""));
+        }
+        Network network = NetworkManager.getInstance().getNetwork(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mList.add(new ItemBean("network", null == network ? "" : network.toString(), ""));
+        } else {
+            mList.add(new ItemBean("network", getString(R.string.version_codes_error_format, Build.VERSION_CODES.M), ""));
+        }
+        // 方法1
+        Display display = getWindowManager().getDefaultDisplay();
+        mList.add(new ItemBean("Height", String.valueOf(display.getHeight()), ""));
+        mList.add(new ItemBean("Width", String.valueOf(display.getWidth()), ""));
 
+        // 方法2
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mList.add(new ItemBean("HeightPixels", String.valueOf(displayMetrics.heightPixels), ""));
+        mList.add(new ItemBean("WidthPixels", String.valueOf(displayMetrics.widthPixels), ""));
+        mList.add(new ItemBean("scaledDensity", String.valueOf(displayMetrics.scaledDensity), ""));
+        mList.add(new ItemBean("densityDpi", String.valueOf(displayMetrics.densityDpi), ""));
+        mList.add(new ItemBean("density", String.valueOf(displayMetrics.density), ""));
+        mList.add(new ItemBean("xdpi", String.valueOf(displayMetrics.xdpi), ""));
+        mList.add(new ItemBean("ydpi", String.valueOf(displayMetrics.ydpi), ""));
+
+
+        BluetoothAdapter bluetoothAdapter = BlueManager.getInstance().getBluetoothAdapter(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            mList.add(new ItemBean("蓝牙名称", null == bluetoothAdapter ? "" : bluetoothAdapter.getName(), ""));
+            mList.add(new ItemBean("蓝牙地址", null == bluetoothAdapter ? "" : bluetoothAdapter.getAddress(), ""));
+        } else {
+            mList.add(new ItemBean("蓝牙设备", getString(R.string.version_codes_error_format, Build.VERSION_CODES.M), ""));
+        }
+
+        mList.add(new ItemBean("ANDROID_ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), ""));
         mAdapter.notifyDataSetChanged();
 
-        Display display = getWindowManager().getDefaultDisplay();
-
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-        DisplayMetrics book = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(book);
 
         try {
             //反射获取值
@@ -365,79 +510,55 @@ public class SystemActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        //获取网络连接管理者
-        ConnectivityManager connectionManager = (ConnectivityManager)
-                getSystemService(CONNECTIVITY_SERVICE);
-        //获取网络的状态信息，有下面三种方式
-        NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
-
-//        setEditText(R.id.lianwang, networkInfo.getType() + "");
-//        setEditText(R.id.lianwangname, networkInfo.getTypeName());
-//
-//
-//        setEditText(R.id.wifimac, wifi.getConnectionInfo().getMacAddress());
-//        setEditText(R.id.getssid, wifi.getConnectionInfo().getSSID());
-//        setEditText(R.id.getbssid, wifi.getConnectionInfo().getBSSID());
-//        setEditText(R.id.text_item_ip_value, wifi.getConnectionInfo().getIpAddress() + "");
-//        setEditText(R.id.bluemac, BluetoothAdapter.getDefaultAdapter().getAddress());
-//        setEditText(R.id.bluname, BluetoothAdapter.getDefaultAdapter().getName() );
-//
-//        setEditText(R.id.cpu, getCpuName());
-//
-//
-//        setEditText(R.id.text_item_android_id_value, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-//
-//        setEditText(R.id.radiovis, Build.getRadioVersion());
-//        setEditText(R.id.text_item_build_serial_value, Build.SERIAL);
-//        setEditText(R.id.text_item_build_brand_value, Build.BRAND);
-//        setEditText(R.id.text_item_build_tag_value, Build.TAGS);
-//        setEditText(R.id.text_item_build_device_value, Build.DEVICE);
-//        setEditText(R.id.text_item_fingerprint_value, Build.FINGERPRINT);
-//        setEditText(R.id.text_item_build_bootloader_value, Build.BOOTLOADER);
-//        setEditText(R.id.text_item_version_release_value, Build.VERSION.RELEASE);
-//        setEditText(R.id.text_item_version_sdk_value, Build.VERSION.SDK);
-//        setEditText(R.id.text_item_version_sdk_int_value, Build.VERSION.SDK_INT + "");
-//        setEditText(R.id.text_item_version_code_name_value, Build.VERSION.CODENAME);
-//        setEditText(R.id.text_item_version_incremental_value, Build.VERSION.INCREMENTAL);
-//        setEditText(R.id.text_item_build_cpu_abi_value, Build.CPU_ABI);
-//        setEditText(R.id.text_item_build_cpu_abi_2_value, Build.CPU_ABI2);
-//        setEditText(R.id.text_item_build_board_value, Build.BOARD);
-//        setEditText(R.id.text_item_build_model_value, Build.MODEL);
-//        setEditText(R.id.text_item_build_product_value, Build.PRODUCT);
-//        setEditText(R.id.text_item_build_type_value, Build.TYPE);
-//        setEditText(R.id.text_item_build_user_value, Build.USER);
-//        setEditText(R.id.text_item_build_display_value, Build.DISPLAY);
-//        setEditText(R.id.text_item_build_hardware_value, Build.HARDWARE);
-//        setEditText(R.id.text_item_build_host_value, Build.HOST);
-//        setEditText(R.id.text_item_build_manufacturer_value, Build.MANUFACTURER);
-//
-//        setEditText(R.id.text_item_build_id_value, Build.ID);
-//        setEditText(R.id.text_item_build_time_value, Build.TIME + "");
-//
-//        setEditText(R.id.text_item_width_value, display.getWidth() + "");
-//        setEditText(R.id.text_item_height_value, display.getHeight() + "");
-//        setEditText(R.id.text_item_dpi_value, book.densityDpi + "");
-//        setEditText(R.id.text_item_density_value, book.density + "");
-//        setEditText(R.id.text_item_dpi_x_value, book.xdpi + "");
-//        setEditText(R.id.text_item_dpi_y_value, book.ydpi + "");
-//        setEditText(R.id.text_item_scale_density_value, book.scaledDensity + "");
-//
-//
-//        //setEditText(R.id.wl,getNetworkState(this)+"");
-//        // 方法2
-//        DisplayMetrics dm = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        int width = dm.widthPixels;
-//        int height = dm.heightPixels;
-//
-//        setEditText(R.id.text_item_x_width_value, width + "");
-//        setEditText(R.id.text_item_x_height_value, height + "");
-
-
     }
 
+
+    /**
+     * WIFI_STATE_DISABLING  WIFI网卡正在关闭  0
+     * WIFI_STATE_DISABLED   WIFI网卡不可用  1
+     * WIFI_STATE_ENABLING    WIFI网卡正在打开  2
+     * WIFI_STATE_ENABLED     WIFI网卡可用  3
+     * WIFI_STATE_UNKNOWN    WIFI网卡状态不可知 4
+     *
+     * @param state
+     * @return
+     */
+    private String getWifiState(int state) {
+        switch (state) {
+            case WifiManager.WIFI_STATE_DISABLING:
+                return "WIFI网卡正在关闭";
+            case WifiManager.WIFI_STATE_DISABLED:
+                return "WIFI网卡不可用";
+            case WifiManager.WIFI_STATE_ENABLING:
+                return "WIFI网卡正在打开";
+            case WifiManager.WIFI_STATE_ENABLED:
+                return "WIFI网卡可用";
+            case WifiManager.WIFI_STATE_UNKNOWN:
+                return "WIFI网卡状态不可知";
+            default:
+                return "WIFI网卡状态不可知";
+        }
+    }
+
+    /**
+     * Wifi强度
+     *
+     * @param level
+     * @return
+     */
+    private String getWifiLevel(int level) {
+        String levelStr = "无信号";
+        if (level <= 0 && level >= -50) {
+            levelStr = "信号最好";
+        } else if (level < -50 && level >= -70) {
+            levelStr = "信号较好";
+        } else if (level < -70 && level >= -80) {
+            levelStr = "信号一般";
+        } else if (level < -80 && level >= -100) {
+            levelStr = "信号差";
+        }
+        return "信号强度：" + levelStr;
+    }
 
     /**
      * 数组转字符串  换行
@@ -459,16 +580,22 @@ public class SystemActivity extends BaseActivity {
     /**
      * 数组转字符串  换行
      *
-     * @param objectList
+     * @param list
      * @return
      */
-    private String listToString(List<CellInfo> objectList) {
-        if (null == objectList || objectList.size() == 0) {
+    private String listToString(List<? extends Parcelable> list) {
+        if (null == list || list.size() == 0) {
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for (Object o : objectList) {
-            stringBuilder.append(o.toString()).append('\n');
+        for (Parcelable parcelable : list) {
+            stringBuilder.append(parcelable.toString()).append('\n');
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1&&parcelable instanceof CellInfo) {
+//                stringBuilder.append(parcelable.toString()).append('\n');
+//            }
+//            if (parcelable instanceof WifiConfiguration) {
+//                stringBuilder.append(parcelable.toString()).append('\n');
+//            }
         }
         return stringBuilder.toString().trim();
     }
@@ -574,7 +701,7 @@ public class SystemActivity extends BaseActivity {
             case TelephonyManager.DATA_SUSPENDED:
                 return "暂停";
             default:
-                return "断开";
+                return "未知状态";
         }
     }
 
@@ -606,43 +733,43 @@ public class SystemActivity extends BaseActivity {
     private String getNetworkType(int type) {
         switch (type) {
             case TelephonyManager.NETWORK_TYPE_GPRS:
-                return "GPRS";
+                return "2G-GPRS";
             case TelephonyManager.NETWORK_TYPE_EDGE:
-                return "EDGE";
+                return "2G-EDGE";
             case TelephonyManager.NETWORK_TYPE_UMTS:
-                return "UMTS";
-            case TelephonyManager.NETWORK_TYPE_HSDPA:
-                return "HSDPA";
-            case TelephonyManager.NETWORK_TYPE_HSUPA:
-                return "HSUPA";
-            case TelephonyManager.NETWORK_TYPE_HSPA:
-                return "HSPA";
+                return "3G-UMTS";
             case TelephonyManager.NETWORK_TYPE_CDMA:
-                return "CDMA";
+                return "2G-CDMA";
             case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                return "CDMA - EvDo rev. 0";
+                return "3G-CDMA - EvDo rev. 0";
             case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                return "CDMA - EvDo rev. A";
-            case TelephonyManager.NETWORK_TYPE_EVDO_B:
-                return "CDMA - EvDo rev. B";
+                return "3G-CDMA - EvDo rev. A";
             case TelephonyManager.NETWORK_TYPE_1xRTT:
-                return "CDMA - 1xRTT";
-            case TelephonyManager.NETWORK_TYPE_LTE:
-                return "LTE";
-            case TelephonyManager.NETWORK_TYPE_EHRPD:
-                return "CDMA - eHRPD";
+                return "2G-CDMA - 1xRTT";
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                return "3G-HSDPA";
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                return "3G-HSUPA";
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                return "3G-HSPA";
             case TelephonyManager.NETWORK_TYPE_IDEN:
-                return "iDEN";
+                return "2G-IDEN";
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                return "3G-CDMA - EvDo rev. B";
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                return "4G-LTE";
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                return "3G-CDMA - eHRPD";
             case TelephonyManager.NETWORK_TYPE_HSPAP:
-                return "HSPA+";
+                return "3G-HSPA+";
             case TelephonyManager.NETWORK_TYPE_GSM:
-                return "GSM";
+                return "2G-GSM";
             case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
-                return "TD_SCDMA";
+                return "3G-TD_SCDMA";
             case TelephonyManager.NETWORK_TYPE_IWLAN:
-                return "IWLAN";
+                return "4G-IWLAN";
             case 19:
-                return "LTE_CA";
+                return "4G-LTE_CA";
             default:
                 return "UNKNOWN";
         }
