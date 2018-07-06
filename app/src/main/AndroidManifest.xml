@@ -111,8 +111,6 @@
         </activity>
         <activity android:name=".activity.configuration.SystemActivity">
         </activity>
-        <activity android:name=".activity.downloadmanager.DownloaderActivity">
-        </activity>
         <activity android:name=".activity.service.ServiceActivity">
         </activity>
 
