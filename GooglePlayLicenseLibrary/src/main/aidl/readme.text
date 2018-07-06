@@ -1,0 +1,1 @@
+Library 不支持AIDL 需要在java项目中实现  编译会在D:\Users\Demo\DemoApp\GooglePlayLicenseLibrary\build\generated\source\aidl\debug  生成java 文件

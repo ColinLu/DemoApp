@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -16,12 +17,16 @@ import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Looper;
+import android.os.StatFs;
 import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,12 +37,14 @@ import com.colin.demo.app.BuildConfig;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static android.content.Context.WIFI_SERVICE;
@@ -48,6 +55,337 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  */
 
 public abstract class AppUtil {
+
+    /**
+     * Build class所有的字段属性
+     * Build.BOARD : Z91
+     * Build.BOOTLOADER : unknown
+     * Build.BRAND : FaDi
+     * Build.CPU_ABI : arm64-v8a
+     * Build.CPU_ABI2 :
+     * Build.DEVICE : Z91
+     * Build.DISPLAY : TEST_FaDi_Z91_S100_20180108
+     * Build.FINGERPRINT : FaDi/Z91/Z91:7.1.1/N6F26Q/1515397384:user/release-keys
+     * Build.HARDWARE : mt6739
+     * Build.HOST : 69959bbb90c6
+     * Build.ID : N6F26Q
+     * Build.IS_DEBUGGABLE : true
+     * Build.IS_EMULATOR : false
+     * Build.MANUFACTURER : FaDi
+     * Build.MODEL : Z91
+     * Build.PERMISSIONS_REVIEW_REQUIRED : false
+     * Build.PRODUCT : Z91
+     * Build.RADIO : unknown
+     * Build.SERIAL : 0123456789ABCDEF
+     * Build.SUPPORTED_32_BIT_ABIS : [Ljava.lang.String;@305cf5e
+     * Build.SUPPORTED_64_BIT_ABIS : [Ljava.lang.String;@f5c1f3f
+     * Build.SUPPORTED_ABIS : [Ljava.lang.String;@578b00c
+     * Build.TAG : Build
+     * Build.TAGS : release-keys
+     * Build.TIME : 1515397382000
+     * Build.TYPE : user
+     * Build.UNKNOWN : unknown
+     * Build.USER : FaDi
+     * Build.VERSION.ACTIVE_CODENAMES : [Ljava.lang.String;@f4ecd55
+     * Build.VERSION.ALL_CODENAMES : [Ljava.lang.String;@bdb836a
+     * Build.VERSION.BASE_OS :
+     * Build.VERSION.CODENAME : REL
+     * Build.VERSION.INCREMENTAL : 1515397384
+     * Build.VERSION.PREVIEW_SDK_INT : 0
+     * Build.VERSION.RELEASE : 7.1.1
+     * Build.VERSION.RESOURCES_SDK_INT : 25
+     * Build.VERSION.SDK : 25
+     * Build.VERSION.SDK_INT : 25
+     * Build.VERSION.SECURITY_PATCH : 2017-11-05
+     */
+    public static List<String> getAllBuildInformation() {
+        List<String> result = new ArrayList<>();
+        Field[] fields = Build.class.getDeclaredFields();
+
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                String info = "Build." + field.getName() + " : " + field.get(null);
+                LogUtil.d(info);
+
+                result.add(info);
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+
+        Field[] fieldsVersion = Build.VERSION.class.getDeclaredFields();
+        for (Field field : fieldsVersion) {
+            try {
+                field.setAccessible(true);
+                String info = "Build.VERSION." + field.getName() + " : " + field.get(null);
+                LogUtil.d(info);
+                result.add(info);
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+        return result;
+    }
+
+    public static Map<String, String> getBuildInformation() {
+        Map<String, String> map = new HashMap<>();
+        Field[] fields = Build.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                LogUtil.d("Build." + field.getName() + " : " + field.get(null));
+                map.put("Build." + field.getName(), field.get(null).toString());
+
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+
+        Field[] fieldsVersion = Build.VERSION.class.getDeclaredFields();
+        for (Field field : fieldsVersion) {
+            try {
+                field.setAccessible(true);
+                String info = "Build.VERSION." + field.getName() + " : " + field.get(null);
+                LogUtil.d("Build." + field.getName() + " : " + field.get(null));
+                map.put("Build.VERSION." + field.getName(), field.get(null).toString());
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+        return map;
+    }
+
+    public static Map<String, String> getWifiInfoInformation() {
+        Map<String, String> map = new HashMap<>();
+        Field[] fields = WifiInfo.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                LogUtil.d("WifiInfo." + field.getName() + " : " + field.get(null));
+                map.put("WifiInfo." + field.getName(), field.get(null).toString());
+
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+        return map;
+    }
+
+    public static Map<String, String> getNetworkInfoInformation() {
+        Map<String, String> map = new HashMap<>();
+        Field[] fields = NetworkInfo.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                LogUtil.d("NetworkInfo." + field.getName() + " : " + field.get(null));
+                map.put("NetworkInfo." + field.getName(), field.get(null).toString());
+
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+        return map;
+    }
+
+    public static Map<String, String> getBluetoothAdapterInformation() {
+        Map<String, String> map = new HashMap<>();
+        Field[] fields = BluetoothAdapter.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                LogUtil.d("BluetoothAdapter." + field.getName() + " : " + field.get(null));
+                map.put("BluetoothAdapter." + field.getName(), field.get(null).toString());
+
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+        return map;
+    }
+
+    public static Map<String, String> getTelephonyManagerInformation() {
+        Map<String, String> map = new HashMap<>();
+        Field[] fields = TelephonyManager.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                LogUtil.d("TelephonyManager." + field.getName() + " : " + field.get(null));
+                map.put("TelephonyManager." + field.getName(), field.get(null).toString());
+
+            } catch (Exception e) {
+                LogUtil.e("an error occured when collect crash info", e);
+            }
+        }
+        return map;
+    }
+
+    /* /proc/meminfo
+
+    MemTotal:        2902436 kB
+    MemFree:          199240 kB
+    MemAvailable:    1088764 kB
+    Buffers:           40848 kB
+    Cached:           862908 kB
+    SwapCached:        54696 kB
+    Active:          1222848 kB
+    Inactive:         671468 kB
+    Active(anon):     758516 kB
+    Inactive(anon):   242560 kB
+    Active(file):     464332 kB
+    Inactive(file):   428908 kB
+    Unevictable:        5972 kB
+    Mlocked:             256 kB
+    SwapTotal:       1048572 kB
+    SwapFree:         537124 kB
+    Dirty:                12 kB
+    Writeback:             0 kB
+    AnonPages:        988820 kB
+    Mapped:           508996 kB
+    Shmem:              4800 kB
+    Slab:             157204 kB
+    SReclaimable:      57364 kB
+    SUnreclaim:        99840 kB
+    KernelStack:       41376 kB
+    PageTables:        51820 kB
+    NFS_Unstable:          0 kB
+    Bounce:                0 kB
+    WritebackTmp:          0 kB
+    CommitLimit:     2499788 kB
+    Committed_AS:   76292324 kB
+    VmallocTotal:   258867136 kB
+    VmallocUsed:           0 kB
+    VmallocChunk:          0 kB
+    CmaTotal:              0 kB
+    CmaFree:               0 kB
+*/
+    public static List<String> getMemInfo() {
+        List<String> result = new ArrayList<>();
+
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new FileReader("/proc/meminfo"));
+            while ((line = br.readLine()) != null) {
+                result.add(line);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+    /**
+     * OpenGL ES 版本
+     *
+     * @param mContext
+     * @return
+     */
+    public static String getOpenGlVersion(Context mContext) {
+        return ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
+    }
+
+    /**
+     * 获得SD卡总大小
+     *
+     * @return
+     */
+    public static String getSDTotalSize(Context mContext) {
+        File path = Environment.getExternalStorageDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            totalBlocks = stat.getBlockCountLong();
+        }else {
+            totalBlocks = stat.getBlockCount();
+        }
+        return Formatter.formatFileSize(mContext, blockSize * totalBlocks);
+    }
+
+    /**
+     * 获得sd卡剩余容量，即可用大小
+     *
+     * @return
+     */
+    public static String getSDAvailableSize(Context mContext) {
+        File path = Environment.getExternalStorageDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return Formatter.formatFileSize(mContext, blockSize * availableBlocks);
+    }
+
+    /**
+     * 获得机身ROM总大小
+     *
+     * @return
+     */
+    public static String getRomTotalSize(Context mContext) {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            totalBlocks = stat.getBlockCountLong();
+        }else {
+            totalBlocks = stat.getBlockCount();
+        }
+        return Formatter.formatFileSize(mContext, blockSize * totalBlocks);
+    }
+
+    /**
+     * 获得机身可用ROM
+     *
+     * @return
+     */
+    public static String getRomAvailableSize(Context mContext) {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return Formatter.formatFileSize(mContext, blockSize * availableBlocks);
+    }
+
+    public static boolean isRooted() {
+        // nexus 5x "/su/bin/"
+        String[] paths = {"/system/xbin/", "/system/bin/", "/system/sbin/", "/sbin/", "/vendor/bin/", "/su/bin/"};
+        try {
+            for (int i = 0; i < paths.length; i++) {
+                String path = paths[i] + "su";
+                if (new File(path).exists()) {
+                    String execResult = exec(new String[]{"ls", "-l", path});
+                    Log.d("cyb", "isRooted=" + execResult);
+                    if (TextUtils.isEmpty(execResult) || execResult.indexOf("root") == execResult.lastIndexOf("root")) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static String exec(String[] exec) {
+        String ret = "";
+        ProcessBuilder processBuilder = new ProcessBuilder(exec);
+        try {
+            Process process = processBuilder.start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                ret += line;
+            }
+            process.getInputStream().close();
+            process.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
     /**
      * android  deviceID 与 imei
      *
@@ -200,13 +538,7 @@ public abstract class AppUtil {
         if (null == locationManager) {
             return false;
         }
-        // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-//        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
-//        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-//        LogUtil.e("gps------>>" + String.valueOf(gps));
-//        LogUtil.e("network-->>" + String.valueOf(network));
-//        return gps || network;
     }
 
     /**
@@ -247,53 +579,7 @@ public abstract class AppUtil {
         return false;
     }
 
-    /**
-     * 获取指定文件大小
-     *
-     * @param file
-     * @return
-     * @throws Exception
-     */
-    public static String getFileSize(File file) {
-        long size = 0;
-        if (null == file || !file.exists()) {
-            return "0KB";
-        }
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-            size = fis.available();
-        } catch (Exception e) {
-            LogUtil.e("Exception-->>" + e.getMessage());
-            e.printStackTrace();
-        }
-        return formatFileSize(size);
-    }
 
-    /**
-     * 转换文件大小
-     *
-     * @param fileS
-     * @return
-     */
-    public static String formatFileSize(long fileS) {
-        DecimalFormat df = new DecimalFormat("#.00");
-        String fileSizeString = "";
-        String wrongSize = "0B";
-        if (fileS == 0) {
-            return wrongSize;
-        }
-        if (fileS < 1024) {
-            fileSizeString = df.format((double) fileS) + "B";
-        } else if (fileS < 1048576) {
-            fileSizeString = df.format((double) fileS / 1024) + "KB";
-        } else if (fileS < 1073741824) {
-            fileSizeString = df.format((double) fileS / 1048576) + "MB";
-        } else {
-            fileSizeString = df.format((double) fileS / 1073741824) + "GB";
-        }
-        return fileSizeString;
-    }
 
     /**
      * 安装app 适配权限7.0
@@ -750,7 +1036,7 @@ public abstract class AppUtil {
             Toast.makeText(context, "Wifi正在开启", Toast.LENGTH_SHORT).show();
         } else if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
             Toast.makeText(context, "Wifi已经开启", Toast.LENGTH_SHORT).show();
-        } else {//WifiManager.WIFI_STATE_UNKNOWN
+        } else {//WiFiManager.WIFI_STATE_UNKNOWN
             Toast.makeText(context, "没有获取到WiFi状态", Toast.LENGTH_SHORT).show();
         }
     }
@@ -778,7 +1064,6 @@ public abstract class AppUtil {
      *
      * @param context
      * @return
-     *
      */
     @SuppressLint("MissingPermission,HardwareIds")
     public static String getOperators(Context context) {

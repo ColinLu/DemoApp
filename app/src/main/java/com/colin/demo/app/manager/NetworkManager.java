@@ -79,13 +79,16 @@ public final class NetworkManager {
     }
 
     /**
-     * 检测网络是否连接
+     * 精确的网络状态
      */
     public NetworkInfo.DetailedState getDetailedState(Context context) {
         NetworkInfo networkInfo = getNetworkInfo(context);
         return null == networkInfo ? null : networkInfo.getDetailedState();
     }
 
+    /**
+     * 粗略的网络状态
+     */
     public NetworkInfo.State getState(Context context) {
         NetworkInfo networkInfo = getNetworkInfo(context);
         return null == networkInfo ? null : networkInfo.getState();

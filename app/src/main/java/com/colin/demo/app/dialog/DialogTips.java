@@ -79,7 +79,7 @@ public class DialogTips extends Dialog implements View.OnClickListener {
             return;
         }
         layoutParams.width = (int) (MetricsUtil.getWindowsWidth(getContext()) * 0.95);
-        layoutParams.height = (int) (MetricsUtil.getWindowsHeight(getContext()) * 0.75);
+        layoutParams.height = (int) (MetricsUtil.getWindowsHeight(getContext()) * 0.55);
         layoutParams.gravity = Gravity.CENTER;
         window.setAttributes(layoutParams);
     }

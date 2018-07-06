@@ -1,7 +1,6 @@
 package com.colin.demo.app.activity.configuration;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -26,7 +25,9 @@ import com.colin.demo.app.callback.OnRecyclerItemClickListener;
 import com.colin.demo.app.dialog.DialogTips;
 import com.colin.demo.app.manager.BlueManager;
 import com.colin.demo.app.manager.NetworkManager;
+import com.colin.demo.app.manager.WiFiManager;
 import com.colin.demo.app.utils.AppUtil;
+import com.colin.demo.app.utils.CpuUtil;
 import com.colin.demo.app.utils.InitViewUtil;
 import com.colin.demo.app.utils.PermissionUtil;
 import com.colin.demo.app.utils.StringUtil;
@@ -38,6 +39,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class SystemActivity extends BaseActivity {
@@ -243,12 +245,15 @@ public class SystemActivity extends BaseActivity {
         }
 
         mList.clear();
+        mList.add(new ItemBean("ANDROID_ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), ""));
+
         ///////////////////////////////////////////////////Build取值开始///////////////////////////////////////////////////////////////////
+        List<String> stringList = AppUtil.getAllBuildInformation();
         mList.add(new ItemBean("设备ID", Build.ID, "Either a changelist number, or a label like \"M4-rc20\""));
         mList.add(new ItemBean("设备类型", Build.TYPE, "The type of build, like \"user\" or \"eng\"."));
         mList.add(new ItemBean("描述build的标签", Build.TAGS, "Comma-separated tags describing the build, like \"unsigned,debug\"."));
-        mList.add(new ItemBean("串口序列号", Build.SERIAL, "被getSerial()方法替代"));
 
+        mList.add(new ItemBean("串口序列号", Build.SERIAL, "被getSerial()方法替代"));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mList.add(new ItemBean("串口序列号", Build.getSerial(), "方法获取需要权限--READ_PHONE_STATE"));
         } else {
@@ -323,7 +328,7 @@ public class SystemActivity extends BaseActivity {
 
         //最好获取权限 READ_PHONE_STATE
         //https://blog.csdn.net/perArther/article/details/51772561
-        ///////////////////////////////////////////////////手机取值开始///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////手机TelephonyManager取值开始///////////////////////////////////////////////////////////////////
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
 
@@ -381,27 +386,28 @@ public class SystemActivity extends BaseActivity {
         mList.add(new ItemBean("数据连接状态", getPhoneDataState(null == telephonyManager ? -1 : telephonyManager.getDataState()), "Returns a constant indicating the type of activity on a data connection"));
 
 
-        ///////////////////////////////////////////////////手机取值结束///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////手机TelephonyManager取值结束///////////////////////////////////////////////////////////////////
         //https://blog.csdn.net/jdsjlzx/article/details/40740543
         //https://www.jianshu.com/p/67aaf1fdb921
+        ///////////////////////////////////////////////////WifiManager取值开始///////////////////////////////////////////////////////////////////
         @SuppressLint("WifiManagerLeak") WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (null != wifi) {
-            mList.add(new ItemBean("WiFi是否打开", String.valueOf(wifi.isWifiEnabled()), ""));
-            mList.add(new ItemBean("WiFi状态", getWifiState(wifi.getWifiState()), ""));
+            mList.add(new ItemBean("WiFi是否打开", String.valueOf(WiFiManager.getInstance().isWifiEnabled(this)), ""));
+            mList.add(new ItemBean("WiFi状态", WiFiManager.getInstance().getWifiStateString(this), ""));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("是否支持5GWifi", String.valueOf(wifi.is5GHzBandSupported()), ""));
+                mList.add(new ItemBean("是否支持5GWifi", String.valueOf(wifi.is5GHzBandSupported()), "true if this adapter supports 5 GHz band"));
             } else {
-                mList.add(new ItemBean("是否支持5GWifi", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+                mList.add(new ItemBean("是否支持5GWifi", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "true if this adapter supports 5 GHz band"));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isDeviceToApRttSupported", String.valueOf(wifi.isDeviceToApRttSupported()), ""));
+                mList.add(new ItemBean("是否支持ApRtt", String.valueOf(wifi.isDeviceToApRttSupported()), " true if this adapter supports Device-to-AP RTT"));
             } else {
-                mList.add(new ItemBean("isDeviceToApRttSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+                mList.add(new ItemBean("是否支持ApRtt", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), " true if this adapter supports Device-to-AP RTT"));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isEnhancedPowerReportingSupported", String.valueOf(wifi.isEnhancedPowerReportingSupported()), ""));
+                mList.add(new ItemBean("isEnhancedPowerReportingSupported", String.valueOf(wifi.isEnhancedPowerReportingSupported()), " true if this adapter supports advanced power/performance counters"));
             } else {
-                mList.add(new ItemBean("isEnhancedPowerReportingSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+                mList.add(new ItemBean("isEnhancedPowerReportingSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), " true if this adapter supports advanced power/performance counters"));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mList.add(new ItemBean("isP2pSupported", String.valueOf(wifi.isP2pSupported()), ""));
@@ -419,9 +425,9 @@ public class SystemActivity extends BaseActivity {
                 mList.add(new ItemBean("isScanAlwaysAvailable", getString(R.string.version_codes_error_format, Build.VERSION_CODES.JELLY_BEAN_MR2), ""));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isTdlsSupported", String.valueOf(wifi.isTdlsSupported()), ""));
+                mList.add(new ItemBean("isTdlsSupported", String.valueOf(wifi.isTdlsSupported()), "true if this adapter supports Tunnel Directed Link Setup"));
             } else {
-                mList.add(new ItemBean("isTdlsSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
+                mList.add(new ItemBean("isTdlsSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "true if this adapter supports Tunnel Directed Link Setup"));
             }
 
             mList.add(new ItemBean("WiFiDHCP的信息", wifi.getDhcpInfo().toString(), ""));
@@ -484,32 +490,32 @@ public class SystemActivity extends BaseActivity {
         mList.add(new ItemBean("ydpi", String.valueOf(displayMetrics.ydpi), ""));
 
 
-        BluetoothAdapter bluetoothAdapter = BlueManager.getInstance().getBluetoothAdapter(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mList.add(new ItemBean("蓝牙名称", null == bluetoothAdapter ? "" : bluetoothAdapter.getName(), ""));
-            mList.add(new ItemBean("蓝牙地址", null == bluetoothAdapter ? "" : bluetoothAdapter.getAddress(), ""));
+            mList.add(new ItemBean("蓝牙名称", BlueManager.getInstance().getBluetoothName(this), ""));
+            mList.add(new ItemBean("蓝牙地址", BlueManager.getInstance().getBluetoothAddress(this), ""));
+            mList.add(new ItemBean("蓝牙开关状态", BlueManager.getInstance().getBluetoothStateString(this), ""));
+            mList.add(new ItemBean("蓝牙扫描状态", BlueManager.getInstance().getBluetoothScanModeString(this), ""));
+            mList.add(new ItemBean("蓝牙设备绑定", listToString(BlueManager.getInstance().getBluetoothBondedDevices(this)), ""));
         } else {
             mList.add(new ItemBean("蓝牙设备", getString(R.string.version_codes_error_format, Build.VERSION_CODES.M), ""));
         }
 
-        mList.add(new ItemBean("ANDROID_ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), ""));
+        mList.add(new ItemBean("Cpu信息", arrayToString(CpuUtil.getCpuInfo().toArray(new String[CpuUtil.getCpuInfo().size()])), ""));
+        mList.add(new ItemBean("Cpu核数", String.valueOf(CpuUtil.getCPUCoreNum()), ""));
+        mList.add(new ItemBean("Cpu核数", String.valueOf(CpuUtil.getNumCpuCores()), ""));
+        mList.add(new ItemBean("Cpu最高频率", String.valueOf(CpuUtil.getCpuMaxFreq()), ""));
+        mList.add(new ItemBean("Cpu最低频率", String.valueOf(CpuUtil.getCpuMinFreq()), ""));
+
+        mList.add(new ItemBean("SD卡总大小", AppUtil.getSDTotalSize(this), "获得SD卡总大小"));
+        mList.add(new ItemBean("SD可用大小", AppUtil.getSDAvailableSize(this), "获得sd卡剩余容量，即可用大小"));
+        mList.add(new ItemBean("ROM总大小", AppUtil.getRomTotalSize(this), "获得机身ROM总大小"));
+        mList.add(new ItemBean("ROM可用", AppUtil.getRomAvailableSize(this), "获得机身可用ROM"));
+        mList.add(new ItemBean("是否Root", String.valueOf(AppUtil.isRooted()), "nexus 5x \"/su/bin/\""));
+
+
         mAdapter.notifyDataSetChanged();
 
 
-        try {
-            //反射获取值
-            Class localClass = Class.forName("android.os.SystemProperties");
-            Object localObject1 = localClass.newInstance();
-            Object localObject2 = localClass.getMethod("get", new Class[]{String.class, String.class}).invoke(localObject1, new Object[]{"gsm.version.baseband", "no message"});
-            Object localObject3 = localClass.getMethod("get", new Class[]{String.class, String.class}).invoke(localObject1, new Object[]{"ro.build.display.id", ""});
-
-
-//            setEditText(R.id.get, localObject2 + "");
-//
-//            setEditText(R.id.osVersion, localObject3 + "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -583,26 +589,20 @@ public class SystemActivity extends BaseActivity {
      * @param list
      * @return
      */
-    private String listToString(List<? extends Parcelable> list) {
+    private String listToString(Collection<? extends Parcelable> list) {
         if (null == list || list.size() == 0) {
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (Parcelable parcelable : list) {
             stringBuilder.append(parcelable.toString()).append('\n');
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1&&parcelable instanceof CellInfo) {
-//                stringBuilder.append(parcelable.toString()).append('\n');
-//            }
-//            if (parcelable instanceof WifiConfiguration) {
-//                stringBuilder.append(parcelable.toString()).append('\n');
-//            }
         }
         return stringBuilder.toString().trim();
     }
 
     /**
      * 获取数据活动状态
-     * 0:   DATA_ACTIVITY_NON     数据连接状态：活动，但无数据发送和接受
+     * 0:   DATA_ACTIVITY_NON     数据连接状态：活动，无数据发送和接受
      * 1:   DATA_ACTIVITY_IN      数据连接状态：活动，正在接受数据
      * 2:   DATA_ACTIVITY_OUT     数据连接状态：活动，正在发送数据
      * 3:   DATA_ACTIVITY_INOUT   数据连接状态：活动，正在接受和发送数据
@@ -611,7 +611,7 @@ public class SystemActivity extends BaseActivity {
     private String getPhoneActivityState(int state) {
         switch (state) {
             case TelephonyManager.DATA_ACTIVITY_NONE:
-                return "但无数据发送和接受";
+                return "无数据发送和接受";
             case TelephonyManager.DATA_ACTIVITY_IN:
                 return "正在接受数据";
             case TelephonyManager.DATA_ACTIVITY_OUT:
@@ -621,7 +621,7 @@ public class SystemActivity extends BaseActivity {
             case TelephonyManager.DATA_ACTIVITY_DORMANT:
                 return "睡眠模式";
             default:
-                return "但无数据发送和接受";
+                return "无数据发送和接受";
         }
     }
 

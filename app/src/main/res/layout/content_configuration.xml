@@ -16,33 +16,44 @@
 
         <Button
             style="@style/ButtonStyle"
-            android:onClick="location"
-            android:text="定位"/>
+            android:onClick="system"
+            android:text="系统信息"/>
+
+        <Button
+            style="@style/ButtonStyle"
+            android:onClick="cpu"
+            android:text="cpu信息"/>
+
+        <Button
+            style="@style/ButtonStyle"
+            android:onClick="network"
+            android:text="手机网络"/>
 
         <Button
             style="@style/ButtonStyle"
             android:onClick="wifi"
             android:text="Wifi"/>
+
         <Button
             style="@style/ButtonStyle"
             android:onClick="phoneMessage"
             android:text="手机号码信息"/>
-        <Button
-            style="@style/ButtonStyle"
-            android:onClick="cpu"
-            android:text="cpu信息"/>
-        <Button
-            style="@style/ButtonStyle"
-            android:onClick="system"
-            android:text="系统信息"/>
+
         <Button
             style="@style/ButtonStyle"
             android:onClick="storage"
             android:text="存储信息"/>
+
+        <Button
+            style="@style/ButtonStyle"
+            android:onClick="location"
+            android:text="定位"/>
+
         <Button
             style="@style/ButtonStyle"
             android:onClick="ipAddress"
             android:text="IP地址"/>
+
         <TextView
             android:id="@+id/text_configuration_detail"
             style="@style/TextStyle"

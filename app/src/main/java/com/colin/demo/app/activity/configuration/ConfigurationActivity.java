@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -16,12 +15,15 @@ import com.colin.demo.app.base.BaseActivity;
 import com.colin.demo.app.bean.ItemBean;
 import com.colin.demo.app.dialog.DialogTips;
 import com.colin.demo.app.utils.AppUtil;
+import com.colin.demo.app.utils.CpuUtil;
 import com.colin.demo.app.utils.LogUtil;
 import com.colin.demo.app.utils.PermissionUtil;
 import com.colin.demo.app.utils.StringUtil;
 import com.colin.demo.app.utils.ToastUtil;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class ConfigurationActivity extends BaseActivity {
     private TextView text_configuration_detail;
@@ -69,6 +71,84 @@ public class ConfigurationActivity extends BaseActivity {
 
     }
 
+    public void system(View view) {
+        Map<String, String> map = AppUtil.getBuildInformation();
+        if (null == map || map.size() == 0) {
+            ToastUtil.showToast("获取数据失败");
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+            stringBuilder.append(stringStringEntry.getKey()).append(":\t").append(stringStringEntry.getValue()).append('\n');
+        }
+        stringBuilder.append("--------------------").append('\n');
+        showMessage(stringBuilder.toString().trim());
+    }
+
+    public void cpu(View view) {
+        List<String> cpuInfo = CpuUtil.getCpuInfo();
+        if (null == cpuInfo || cpuInfo.size() == 0) {
+            ToastUtil.showToast("获取数据失败");
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String value : cpuInfo) {
+            stringBuilder.append(value).append('\n');
+        }
+        stringBuilder.append("--------------------").append('\n');
+        showMessage(stringBuilder.toString().trim());
+    }
+
+    public void network(View view) {
+        Map<String, String> map = AppUtil.getNetworkInfoInformation();
+        if (null == map || map.size() == 0) {
+            ToastUtil.showToast("获取数据失败");
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+            stringBuilder.append(stringStringEntry.getKey()).append(":\t").append(stringStringEntry.getValue()).append('\n');
+        }
+        stringBuilder.append("--------------------").append('\n');
+        showMessage(stringBuilder.toString().trim());
+    }
+
+
+    /**
+     * 获取WiFi信息
+     *
+     * @param view
+     */
+    public void wifi(View view) {
+        Map<String, String> map = AppUtil.getWifiInfoInformation();
+        if (null == map || map.size() == 0) {
+            ToastUtil.showToast("获取数据失败");
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+            stringBuilder.append(stringStringEntry.getKey()).append(":\t").append(stringStringEntry.getValue()).append('\n');
+        }
+        stringBuilder.append("--------------------").append('\n');
+        showMessage(stringBuilder.toString().trim());
+    }
+
+    public void phoneMessage(View view) {
+        Map<String, String> map = AppUtil.getTelephonyManagerInformation();
+        if (null == map || map.size() == 0) {
+            ToastUtil.showToast("获取数据失败");
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+            stringBuilder.append(stringStringEntry.getKey()).append(":\t").append(stringStringEntry.getValue()).append('\n');
+        }
+        stringBuilder.append("--------------------").append('\n');
+        showMessage(stringBuilder.toString());
+
+    }
+
+
     /**
      * 定位  权限
      *
@@ -102,112 +182,18 @@ public class ConfigurationActivity extends BaseActivity {
         LogUtil.e("PASSIVE_PROVIDER-->>空");
     }
 
-    /**
-     * 获取WiFi信息
-     *
-     * @param view
-     */
-    public void wifi(View view) {
-        WifiInfo wifiInfo = AppUtil.getWifiInfo(this);
-        showMessage(null == wifiInfo ? "" : wifiInfo.toString());
-
-    }
-
-    public void phoneMessage(View view) {
-        TelephonyManager telephonyManager = AppUtil.getTelephonyManager(this);
-        if (null == telephonyManager) {
-            ToastUtil.showToast("获取手机信息失败");
-            return;
-        }
-        if (!PermissionUtil.getInstance().checkPermission(this, Arrays.asList(PermissionUtil.PERMISSIONS_PHONE), PermissionUtil.REQUEST_CODE_PHONE)) {
+    public void storage(View view) {
+        List<String> memInfo = AppUtil.getMemInfo();
+        if (null == memInfo || memInfo.size() == 0) {
+            ToastUtil.showToast("获取数据失败");
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
-        String IMSI = telephonyManager.getSubscriberId();
-        //返回一个常数表示当前数据连接状态
-        int callState = telephonyManager.getCallState();
-        int simState = telephonyManager.getSimState();
-        //返回1号线的电话号码，例如，MSISDN用于GSM电话。
-        String line1Number = telephonyManager.getLine1Number();
-        //返回注册的网络运营商的国家代码
-        String networkCountryIso = telephonyManager.getNetworkCountryIso();
-        //返回注册的网络运营商的名字
-        String networkOperatorName = telephonyManager.getNetworkOperatorName();
-        //返回一个常数，表示目前在设备上使用的无线电技术（网络类型）。
-        int networkType = telephonyManager.getNetworkType();
-        //返回设备的类型（手机制式）。
-        int phoneType = telephonyManager.getPhoneType();
-        //返回SIM卡运营商的国家代码
-        String simCountryIso = telephonyManager.getSimCountryIso();
-
-        stringBuilder.append("唯一的用户ID-->>").append(IMSI).append('\n');
-        stringBuilder.append("sim的状态-->>").append(getSimState(simState)).append('\n');
-        stringBuilder.append("callState-->>").append(callState).append('\n');
-        stringBuilder.append("line1Number-->>").append(line1Number).append('\n');
-        stringBuilder.append("networkCountryIso-->>").append(networkCountryIso).append('\n');
-        stringBuilder.append("networkOperatorName-->>").append(networkOperatorName).append('\n');
-        stringBuilder.append("networkType-->>").append(networkType).append('\n');
-        stringBuilder.append("phoneType-->>").append(phoneType).append('\n');
-        stringBuilder.append("simCountryIso-->>").append(simCountryIso).append('\n');
-
-
-        stringBuilder.append("Product: " + android.os.Build.PRODUCT + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("CPU_ABI: " + android.os.Build.CPU_ABI + System.getProperty("line.separator")).append('\n');
-        if (Build.VERSION.SDK_INT > 21 && null != Build.SUPPORTED_ABIS && Build.SUPPORTED_ABIS.length > 0) {
-            for (String supportedAbi : Build.SUPPORTED_ABIS) {
-                stringBuilder.append("CPU指令集-->>").append(supportedAbi).append('\n');
-            }
+        for (String value : memInfo) {
+            stringBuilder.append(value).append('\n');
         }
-        stringBuilder.append("TAGS: " + android.os.Build.TAGS + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("VERSION_CODES.BASE: " + android.os.Build.VERSION_CODES.BASE + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("MODEL: " + android.os.Build.MODEL + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SDK: " + android.os.Build.VERSION.SDK + System.getProperty("line.separator"));
-        stringBuilder.append("VERSION.RELEASE: " + android.os.Build.VERSION.RELEASE + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("DEVICE: " + android.os.Build.DEVICE + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("DISPLAY: " + android.os.Build.DISPLAY + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("BRAND: " + android.os.Build.BRAND + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("BOARD: " + android.os.Build.BOARD + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("FINGERPRINT: " + android.os.Build.FINGERPRINT + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("ID: " + android.os.Build.ID + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("MANUFACTURER: " + android.os.Build.MANUFACTURER + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("USER: " + android.os.Build.USER + System.getProperty("line.separator")).append('\n');
-
-
-        String[] abis = new String[]{Build.CPU_ABI, Build.CPU_ABI2};
-        StringBuilder abiStr = new StringBuilder();
-        for (String abi : abis) {
-            abiStr.append(abi);
-            abiStr.append(',');
-        }
-
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        stringBuilder.append("DeviceId(IMEI) = " + tm.getDeviceId() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("DeviceSoftwareVersion = " + tm.getDeviceSoftwareVersion() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("Line1Number = " + tm.getLine1Number() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("NetworkCountryIso = " + tm.getNetworkCountryIso() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("NetworkOperator = " + tm.getNetworkOperator() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("NetworkOperatorName = " + tm.getNetworkOperatorName() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("NetworkType = " + tm.getNetworkType() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("PhoneType = " + tm.getPhoneType() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SimCountryIso = " + tm.getSimCountryIso() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SimOperator = " + tm.getSimOperator() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SimOperatorName = " + tm.getSimOperatorName() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SimSerialNumber = " + tm.getSimSerialNumber() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SimState = " + tm.getSimState() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("SubscriberId(IMSI) = " + tm.getSubscriberId() + System.getProperty("line.separator")).append('\n');
-        stringBuilder.append("VoiceMailNumber = " + tm.getVoiceMailNumber() + System.getProperty("line.separator"));
-        showMessage(stringBuilder.toString());
-
-    }
-
-    public void cpu(View view) {
-
-    }
-
-    public void system(View view) {
-    }
-
-    public void storage(View view) {
+        stringBuilder.append("--------------------").append('\n');
+        showMessage(stringBuilder.toString().trim());
     }
 
     public void ipAddress(View view) {
@@ -235,15 +221,28 @@ public class ConfigurationActivity extends BaseActivity {
         if (null == location) {
             return null;
         }
-        return "getAccuracy:" + location.getAccuracy() + "\r\n"
-                + "getAltitude:" + location.getAltitude() + "\r\n"
-                + "getBearing:" + location.getBearing() + "\r\n"
-                + "getElapsedRealtimeNanos:" + String.valueOf(location.getElapsedRealtimeNanos()) + "\r\n"
-                + "getLatitude:" + location.getLatitude() + "\r\n"
-                + "getLongitude:" + location.getLongitude() + "\r\n"
-                + "getProvider:" + location.getProvider() + "\r\n"
-                + "getSpeed:" + location.getSpeed() + "\r\n"
-                + "getTime:" + location.getTime() + "\r\n";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return "getAccuracy:" + location.getAccuracy() + "\r\n"
+                    + "getAltitude:" + location.getAltitude() + "\r\n"
+                    + "getBearing:" + location.getBearing() + "\r\n"
+                    + "getElapsedRealtimeNanos:" + String.valueOf(location.getElapsedRealtimeNanos()) + "\r\n"
+                    + "getLatitude:" + location.getLatitude() + "\r\n"
+                    + "getLongitude:" + location.getLongitude() + "\r\n"
+                    + "getProvider:" + location.getProvider() + "\r\n"
+                    + "getSpeed:" + location.getSpeed() + "\r\n"
+                    + "getTime:" + location.getTime() + "\r\n"
+                    + "-----------------------" + "\n";
+        } else {
+            return "getAccuracy:" + location.getAccuracy() + "\r\n"
+                    + "getAltitude:" + location.getAltitude() + "\r\n"
+                    + "getBearing:" + location.getBearing() + "\r\n"
+                    + "getLatitude:" + location.getLatitude() + "\r\n"
+                    + "getLongitude:" + location.getLongitude() + "\r\n"
+                    + "getProvider:" + location.getProvider() + "\r\n"
+                    + "getSpeed:" + location.getSpeed() + "\r\n"
+                    + "getTime:" + location.getTime() + "\r\n"
+                    + "-----------------------" + "\n";
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -251,7 +250,7 @@ public class ConfigurationActivity extends BaseActivity {
         if (StringUtil.isEmpty(message)) {
             return;
         }
-        text_configuration_detail.setText(StringUtil.getText(text_configuration_detail) + message + '\n');
+        text_configuration_detail.setText('\n' + StringUtil.getText(text_configuration_detail) + message + '\n');
     }
 
     @Override

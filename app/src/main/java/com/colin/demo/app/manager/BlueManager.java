@@ -1,8 +1,10 @@
 package com.colin.demo.app.manager;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +13,10 @@ import android.os.Build;
 
 import com.colin.demo.app.utils.LogUtil;
 
+import java.util.Set;
+
 /**
- * 描述：蓝牙管理
+ * 描述：蓝牙管理：Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
  * <p>
  * 作者：Colin
  * 时间：2018/6/29
@@ -81,6 +85,104 @@ public class BlueManager {
             return bluetoothManager.getAdapter();
         }
         return BluetoothAdapter.getDefaultAdapter();
+    }
+
+    /**
+     * 获取蓝牙名称
+     *
+     * @param context
+     * @return
+     */
+    public String getBluetoothName(Context context) {
+        BluetoothAdapter bluetoothAdapter = getBluetoothAdapter(context);
+        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+        return null == bluetoothAdapter ? null : bluetoothAdapter.getName();
+    }
+    /**
+     * 获取蓝牙名称
+     *
+     * @param context
+     * @return
+     */
+    public Set<BluetoothDevice> getBluetoothBondedDevices(Context context) {
+        BluetoothAdapter bluetoothAdapter = getBluetoothAdapter(context);
+        return null == bluetoothAdapter ? null : bluetoothAdapter.getBondedDevices();
+    }
+    /**
+     * 获取蓝牙地址
+     *
+     * @param context
+     * @return
+     */
+    @SuppressLint("HardwareIds")
+    public String getBluetoothAddress(Context context) {
+        BluetoothAdapter bluetoothAdapter = getBluetoothAdapter(context);
+        return null == bluetoothAdapter ? null : bluetoothAdapter.getAddress();
+    }
+
+    /**
+     * 获取蓝牙开关状态
+     * STATE_OFF            蓝牙已经关闭
+     * STATE_ON             蓝牙已经打开
+     * STATE_TURNING_OFF    蓝牙处于关闭过程中 ，关闭ing
+     * STATE_TURNING_ON     蓝牙处于打开过程中 ，打开ing
+     *
+     * @param context
+     * @return
+     */
+    public int getBluetoothState(Context context) {
+        BluetoothAdapter bluetoothAdapter = getBluetoothAdapter(context);
+        return null == bluetoothAdapter ? BluetoothAdapter.STATE_OFF : bluetoothAdapter.getState();
+    }
+
+    public String getBluetoothState(int state) {
+        switch (state) {
+            case BluetoothAdapter.STATE_OFF:
+                return "关闭";
+            case BluetoothAdapter.STATE_ON:
+                return "打开";
+            case BluetoothAdapter.STATE_TURNING_OFF:
+                return "关闭过程中";
+            case BluetoothAdapter.STATE_TURNING_ON:
+                return "打开过程中";
+            default:
+                return "关闭";
+        }
+    }
+
+    public String getBluetoothStateString(Context context) {
+        return getBluetoothState(getBluetoothState(context));
+    }
+
+    /**
+     * 获取蓝牙扫描状态
+     * SCAN_MODE_CONNECTABLE                可以扫描其他蓝牙设备
+     * SCAN_MODE_CONNECTABLE_DISCOVERABLE   可以扫描其他蓝牙设备，可以被其他蓝牙设备扫描。
+     * SCAN_MODE_NONE                       不能扫描以及被扫描
+     *
+     * @param context
+     * @return
+     */
+    public int getBluetoothScanMode(Context context) {
+        BluetoothAdapter bluetoothAdapter = getBluetoothAdapter(context);
+        return null == bluetoothAdapter ? BluetoothAdapter.SCAN_MODE_NONE : bluetoothAdapter.getScanMode();
+    }
+
+    public String getBluetoothScanMode(int state) {
+        switch (state) {
+            case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
+                return "可以扫描其他蓝牙设备";
+            case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+                return "可以扫描其他蓝牙设备，可以被其他蓝牙设备扫描";
+            case BluetoothAdapter.SCAN_MODE_NONE:
+                return "不能扫描以及被扫描";
+            default:
+                return "不能扫描以及被扫描";
+        }
+    }
+
+    public String getBluetoothScanModeString(Context context) {
+        return getBluetoothScanMode(getBluetoothScanMode(context));
     }
 
     /**
