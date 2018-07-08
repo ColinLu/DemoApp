@@ -95,7 +95,6 @@ public class BlueManager {
      */
     public String getBluetoothName(Context context) {
         BluetoothAdapter bluetoothAdapter = getBluetoothAdapter(context);
-        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
         return null == bluetoothAdapter ? null : bluetoothAdapter.getName();
     }
     /**

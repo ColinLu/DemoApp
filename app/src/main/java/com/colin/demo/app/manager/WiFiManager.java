@@ -1,6 +1,7 @@
 package com.colin.demo.app.manager;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 /**
@@ -21,6 +22,11 @@ public class WiFiManager {
 
     public WifiManager getWifiManager(Context context) {
         return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    }
+
+    public WifiInfo getWifiInfo(Context context) {
+        WifiManager wifiManager = getWifiManager(context);
+        return null == wifiManager ? null : wifiManager.getConnectionInfo();
     }
 
     /**

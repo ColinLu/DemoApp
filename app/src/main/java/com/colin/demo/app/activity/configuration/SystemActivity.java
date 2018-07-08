@@ -390,54 +390,53 @@ public class SystemActivity extends BaseActivity {
         //https://blog.csdn.net/jdsjlzx/article/details/40740543
         //https://www.jianshu.com/p/67aaf1fdb921
         ///////////////////////////////////////////////////WifiManager取值开始///////////////////////////////////////////////////////////////////
-        @SuppressLint("WifiManagerLeak") WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (null != wifi) {
+        if (null != WiFiManager.getInstance().getWifiManager(this)) {
             mList.add(new ItemBean("WiFi是否打开", String.valueOf(WiFiManager.getInstance().isWifiEnabled(this)), ""));
             mList.add(new ItemBean("WiFi状态", WiFiManager.getInstance().getWifiStateString(this), ""));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("是否支持5GWifi", String.valueOf(wifi.is5GHzBandSupported()), "true if this adapter supports 5 GHz band"));
+                mList.add(new ItemBean("是否支持5GWifi", String.valueOf(WiFiManager.getInstance().getWifiManager(this).is5GHzBandSupported()), "true if this adapter supports 5 GHz band"));
             } else {
                 mList.add(new ItemBean("是否支持5GWifi", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "true if this adapter supports 5 GHz band"));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("是否支持ApRtt", String.valueOf(wifi.isDeviceToApRttSupported()), " true if this adapter supports Device-to-AP RTT"));
+                mList.add(new ItemBean("是否支持ApRtt", String.valueOf(WiFiManager.getInstance().getWifiManager(this).isDeviceToApRttSupported()), " true if this adapter supports Device-to-AP RTT"));
             } else {
                 mList.add(new ItemBean("是否支持ApRtt", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), " true if this adapter supports Device-to-AP RTT"));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isEnhancedPowerReportingSupported", String.valueOf(wifi.isEnhancedPowerReportingSupported()), " true if this adapter supports advanced power/performance counters"));
+                mList.add(new ItemBean("isEnhancedPowerReportingSupported", String.valueOf(WiFiManager.getInstance().getWifiManager(this).isEnhancedPowerReportingSupported()), " true if this adapter supports advanced power/performance counters"));
             } else {
                 mList.add(new ItemBean("isEnhancedPowerReportingSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), " true if this adapter supports advanced power/performance counters"));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isP2pSupported", String.valueOf(wifi.isP2pSupported()), ""));
+                mList.add(new ItemBean("isP2pSupported", String.valueOf(WiFiManager.getInstance().getWifiManager(this).isP2pSupported()), ""));
             } else {
                 mList.add(new ItemBean("isP2pSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isPreferredNetworkOffloadSupported", String.valueOf(wifi.isPreferredNetworkOffloadSupported()), ""));
+                mList.add(new ItemBean("isPreferredNetworkOffloadSupported", String.valueOf(WiFiManager.getInstance().getWifiManager(this).isPreferredNetworkOffloadSupported()), ""));
             } else {
                 mList.add(new ItemBean("isPreferredNetworkOffloadSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), ""));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                mList.add(new ItemBean("isScanAlwaysAvailable", String.valueOf(wifi.isScanAlwaysAvailable()), ""));
+                mList.add(new ItemBean("isScanAlwaysAvailable", String.valueOf(WiFiManager.getInstance().getWifiManager(this).isScanAlwaysAvailable()), ""));
             } else {
                 mList.add(new ItemBean("isScanAlwaysAvailable", getString(R.string.version_codes_error_format, Build.VERSION_CODES.JELLY_BEAN_MR2), ""));
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mList.add(new ItemBean("isTdlsSupported", String.valueOf(wifi.isTdlsSupported()), "true if this adapter supports Tunnel Directed Link Setup"));
+                mList.add(new ItemBean("isTdlsSupported", String.valueOf(WiFiManager.getInstance().getWifiManager(this).isTdlsSupported()), "true if this adapter supports Tunnel Directed Link Setup"));
             } else {
                 mList.add(new ItemBean("isTdlsSupported", getString(R.string.version_codes_error_format, Build.VERSION_CODES.LOLLIPOP), "true if this adapter supports Tunnel Directed Link Setup"));
             }
 
-            mList.add(new ItemBean("WiFiDHCP的信息", wifi.getDhcpInfo().toString(), ""));
-            mList.add(new ItemBean("网络连接的状态", listToString(wifi.getConfiguredNetworks()), ""));
+            mList.add(new ItemBean("WiFiDHCP的信息", WiFiManager.getInstance().getWifiManager(this).getDhcpInfo().toString(), ""));
+            mList.add(new ItemBean("网络连接的状态", listToString(WiFiManager.getInstance().getWifiManager(this).getConfiguredNetworks()), ""));
         } else {
             mList.add(new ItemBean("WiFi", "不支持WiFi", ""));
         }
         //用于描述已经链接的Wifi的信息
-        if (null != wifi && null != wifi.getConnectionInfo()) {
-            WifiInfo wifiInfo = wifi.getConnectionInfo();
+        WifiInfo wifiInfo = WiFiManager.getInstance().getWifiInfo(this);
+        if (null != wifiInfo) {
             mList.add(new ItemBean("IP地址", String.valueOf(wifiInfo.getIpAddress()), ""));
             mList.add(new ItemBean("Mac地址", wifiInfo.getMacAddress(), "Returns a constant indicating the type of activity on a data connection"));
             mList.add(new ItemBean("SSID是否被隐藏", String.valueOf(wifiInfo.getHiddenSSID()), "Returns a constant indicating the type of activity on a data connection"));
@@ -447,7 +446,7 @@ public class SystemActivity extends BaseActivity {
             mList.add(new ItemBean("WiFi强度", String.valueOf(wifiInfo.getRssi()), "Returns a constant indicating the type of activity on a data connection"));
             mList.add(new ItemBean("getNetworkId", String.valueOf(wifiInfo.getNetworkId()), "Returns a constant indicating the type of activity on a data connection"));
             mList.add(new ItemBean("网络链接的状态", wifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState()).toString(), "Returns a constant indicating the type of activity on a data connection"));
-        } else if (null != wifi && null == wifi.getConnectionInfo()) {
+        } else {
             mList.add(new ItemBean("WiFi连接", "未连接", ""));
         }
 
