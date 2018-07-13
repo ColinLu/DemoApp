@@ -164,6 +164,7 @@
                 android:text="@string/packed"
                 android:textColor="@color/white"
                 app:layout_constraintHorizontal_chainStyle="packed"
+
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/text_constraint_chain_packed_center"
                 app:layout_constraintTop_toBottomOf="@+id/text_constraint_chain_spread_left"/>

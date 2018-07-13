@@ -40,7 +40,7 @@ public class PopupWindowActivity extends BaseActivity implements View.OnClickLis
     protected void initListener() {
         findViewById(R.id.text_pop_right).setOnClickListener(this);
         findViewById(R.id.text_pop_left).setOnClickListener(this);
-        findViewById(R.id.text_pop_top).setOnClickListener(this);
+        findViewById(R.id.text_pop_center_bottom).setOnClickListener(this);
         findViewById(R.id.text_pop_bottom).setOnClickListener(this);
     }
 
@@ -56,7 +56,7 @@ public class PopupWindowActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.text_pop_left:
                 break;
-            case R.id.text_pop_top:
+            case R.id.text_pop_center_bottom:
                 break;
             case R.id.text_pop_bottom:
                 break;

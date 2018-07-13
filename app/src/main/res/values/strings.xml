@@ -210,4 +210,8 @@
     <string name="spread_inside">spread_inside</string>
     <string name="spread_weight">spread+weight</string>
     <string name="packed_bias">packed_bias</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

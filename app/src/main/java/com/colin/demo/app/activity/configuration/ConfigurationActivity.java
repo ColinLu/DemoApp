@@ -8,14 +8,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colin.demo.app.R;
 import com.colin.demo.app.base.BaseActivity;
 import com.colin.demo.app.bean.ItemBean;
+import com.colin.demo.app.data.Constants;
 import com.colin.demo.app.dialog.DialogTips;
 import com.colin.demo.app.utils.AppUtil;
 import com.colin.demo.app.utils.CpuUtil;
+import com.colin.demo.app.utils.ImageLoader;
 import com.colin.demo.app.utils.LogUtil;
 import com.colin.demo.app.utils.PermissionUtil;
 import com.colin.demo.app.utils.StringUtil;
@@ -24,9 +27,11 @@ import com.colin.demo.app.utils.ToastUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class ConfigurationActivity extends BaseActivity {
     private TextView text_configuration_detail;
+    private ImageView image_top_bg;
     private ItemBean mItemBean;
 
     @Override
@@ -44,6 +49,8 @@ public class ConfigurationActivity extends BaseActivity {
     @Override
     protected void initView() {
         this.text_configuration_detail = this.findViewById(R.id.text_configuration_detail);
+        this.image_top_bg = this.findViewById(R.id.image_top_bg);
+        AppUtil.fullScreen(this);
     }
 
     @Override
@@ -54,6 +61,7 @@ public class ConfigurationActivity extends BaseActivity {
         }
 
         setTitle(null == mItemBean ? "" : mItemBean.title);
+        ImageLoader.getInstance().loadImage(image_top_bg, Constants.IMAGE_URL[new Random().nextInt(10)]);
     }
 
     @Override
