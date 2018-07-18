@@ -68,7 +68,7 @@ public class MyDatePicker extends WheelPicker<Integer> {
             public void onWheelSelected(Integer item, int position) {
                 selectValue = item;
                 if (mOnYearSelectedListener != null) {
-                    mOnYearSelectedListener.onYearSelected(item);
+                    mOnYearSelectedListener.onValueSelected(item);
                 }
             }
         });
@@ -129,12 +129,12 @@ public class MyDatePicker extends WheelPicker<Integer> {
         return selectValue;
     }
 
-    public void setOnYearSelectedListener(OnValueSelectedListener onYearSelectedListener) {
-        mOnYearSelectedListener = onYearSelectedListener;
+    public void setOnYearSelectedListener(OnValueSelectedListener onValueSelectedListener) {
+        mOnYearSelectedListener = onValueSelectedListener;
     }
 
     public interface OnValueSelectedListener {
-        void onYearSelected(int year);
+        void onValueSelected(int value);
     }
 
 }
