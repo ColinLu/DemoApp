@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_dialog_date_cancel"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:text="@string/cancel"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/text_dialog_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="选择时间"
+            android:textSize="18sp"/>
+
+        <Button
+            android:id="@+id/btn_dialog_date_decide"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:text="@string/sure"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <com.colin.demo.app.widget.picker.DatePicker
+        android:id="@+id/dayPicker_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.colin.demo.app.widget.picker.DatePicker>
+
+</LinearLayout>

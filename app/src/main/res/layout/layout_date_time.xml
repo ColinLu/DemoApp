@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <com.colin.demo.app.widget.picker.YearPicker
+        android:id="@+id/picker_layout_year"
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:halfVisibleItemCount="2"/>
+
+    <com.colin.demo.app.widget.picker.MonthPicker
+        android:id="@+id/picker_layout_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:halfVisibleItemCount="2"/>
+
+    <com.colin.demo.app.widget.picker.DayPicker
+        android:id="@+id/picker_layout_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:halfVisibleItemCount="2"/>
+
+    <com.colin.demo.app.widget.picker.HourPicker
+        android:id="@+id/picker_layout_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:halfVisibleItemCount="2"
+        app:indicatorText="@string/datepicker_hour"
+        app:indicatorTextSize="12sp"
+        app:wheelCyclic="true"/>
+
+    <com.colin.demo.app.widget.picker.MinutePicker
+        android:id="@+id/picker_layout_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:halfVisibleItemCount="2"
+        app:indicatorText="@string/datepicker_minute"
+        app:indicatorTextSize="12sp"
+        app:wheelCyclic="true"/>
+
+</android.support.constraint.ConstraintLayout>

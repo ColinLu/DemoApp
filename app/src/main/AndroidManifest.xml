@@ -128,6 +128,8 @@
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme">
         </activity>
+        <activity android:name=".activity.picker.PickerActivity">
+        </activity>
     </application>
 
 </manifest>

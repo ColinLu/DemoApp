@@ -9,6 +9,7 @@ import android.view.View;
 import com.colin.demo.app.R;
 import com.colin.demo.app.activity.constraintlayout.ConstraintLayoutActivity;
 import com.colin.demo.app.activity.fullscreen.FullscreenActivity;
+import com.colin.demo.app.activity.picker.PickerActivity;
 import com.colin.demo.app.activity.popupwindow.PopupWindowActivity;
 import com.colin.demo.app.activity.recyclerview.RecyclerViewActivity;
 import com.colin.demo.app.activity.viewpager.ViewPagerActivity;
@@ -175,6 +176,7 @@ public class ViewFragment extends BaseFragment {
         mList.add(new ItemBean(3, "PopupWindow", PopupWindowActivity.class));
         mList.add(new ItemBean(4, "ConstraintLayout ", ConstraintLayoutActivity.class));
         mList.add(new ItemBean(5, "FullScreen ", FullscreenActivity.class));
+        mList.add(new ItemBean(6, "选择器 ", PickerActivity.class));
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_NO);
         mAdapter.setFootState(BaseAdapter.FOOT_STATE_FINISH);
         mAdapter.notifyDataSetChanged();
