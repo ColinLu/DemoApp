@@ -22,8 +22,8 @@ import com.colin.demo.app.callback.MyOnPageChangeListener;
 import com.colin.demo.app.callback.OnFragmentListener;
 import com.colin.demo.app.data.Constants;
 import com.colin.demo.app.effect.DepthPageTransformer;
-import com.colin.demo.app.fragment.OtherFragment;
 import com.colin.demo.app.fragment.MethodFragment;
+import com.colin.demo.app.fragment.OtherFragment;
 import com.colin.demo.app.fragment.ViewFragment;
 
 import java.util.ArrayList;
