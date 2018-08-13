@@ -31,26 +31,32 @@ package com.colin.demo.app.utils;
  * @version 1.3
  */
 
-import com.google.android.vending.licensing.util.Base64DecoderException;
 
 /**
  * Base64 converter class. This code is not a full-blown MIME encoder;
  * it simply converts binary data to base64 data and back.
- *
- * <p>Note {@link CharBase64} is a GWT-compatible implementation of this
+ * <p>
  * class.
  */
 public class Base64Util {
-    /** Specify encoding (value is {@code true}). */
+    /**
+     * Specify encoding (value is {@code true}).
+     */
     public final static boolean ENCODE = true;
 
-    /** Specify decoding (value is {@code false}). */
+    /**
+     * Specify decoding (value is {@code false}).
+     */
     public final static boolean DECODE = false;
 
-    /** The equals sign (=) as a byte. */
+    /**
+     * The equals sign (=) as a byte.
+     */
     private final static byte EQUALS_SIGN = (byte) '=';
 
-    /** The new line character (\n) as a byte. */
+    /**
+     * The new line character (\n) as a byte.
+     */
     private final static byte NEW_LINE = (byte) '\n';
 
     /**
@@ -126,7 +132,9 @@ public class Base64Util {
         -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9         // Decimal 244 - 255 */
     };
 
-    /** The web safe decodabet */
+    /**
+     * The web safe decodabet
+     */
     private final static byte[] WEBSAFE_DECODABET =
             {-9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal  0 -  8
                     -5, -5, // Whitespace: Tab and Linefeed
@@ -167,7 +175,9 @@ public class Base64Util {
     // Indicates equals sign in encoding
     private final static byte EQUALS_SIGN_ENC = -1;
 
-    /** Defeats instantiation. */
+    /**
+     * Defeats instantiation.
+     */
     private Base64Util() {
     }
 
@@ -186,12 +196,12 @@ public class Base64Util {
      * The actual number of significant bytes in your array is
      * given by <var>numSigBytes</var>.
      *
-     * @param source the array to convert
-     * @param srcOffset the index where conversion begins
+     * @param source      the array to convert
+     * @param srcOffset   the index where conversion begins
      * @param numSigBytes the number of significant bytes in your array
      * @param destination the array to hold the conversion
-     * @param destOffset the index where output will be put
-     * @param alphabet is the encoding alphabet
+     * @param destOffset  the index where output will be put
+     * @param alphabet    is the encoding alphabet
      * @return the <var>destination</var> array
      * @since 1.3
      */
@@ -252,9 +262,9 @@ public class Base64Util {
     /**
      * Encodes a byte array into web safe Base64 notation.
      *
-     * @param source The data to convert
+     * @param source    The data to convert
      * @param doPadding is {@code true} to pad result with '=' chars
-     *        if it does not fall on 3 byte boundaries
+     *                  if it does not fall on 3 byte boundaries
      */
     public static String encodeWebSafe(byte[] source, boolean doPadding) {
         return encode(source, 0, source.length, WEBSAFE_ALPHABET, doPadding);
@@ -263,12 +273,12 @@ public class Base64Util {
     /**
      * Encodes a byte array into Base64 notation.
      *
-     * @param source The data to convert
-     * @param off Offset in array where conversion should begin
-     * @param len Length of data to convert
-     * @param alphabet is the encoding alphabet
+     * @param source    The data to convert
+     * @param off       Offset in array where conversion should begin
+     * @param len       Length of data to convert
+     * @param alphabet  is the encoding alphabet
      * @param doPadding is {@code true} to pad result with '=' chars
-     *        if it does not fall on 3 byte boundaries
+     *                  if it does not fall on 3 byte boundaries
      * @since 1.4
      */
     public static String encode(byte[] source, int off, int len, byte[] alphabet,
@@ -278,7 +288,7 @@ public class Base64Util {
 
         // If doPadding is false, set length to truncate '='
         // padding characters
-        while (doPadding == false && outLen > 0) {
+        while (!doPadding && outLen > 0) {
             if (outBuff[outLen - 1] != '=') {
                 break;
             }
@@ -291,10 +301,10 @@ public class Base64Util {
     /**
      * Encodes a byte array into Base64 notation.
      *
-     * @param source The data to convert
-     * @param off Offset in array where conversion should begin
-     * @param len Length of data to convert
-     * @param alphabet is the encoding alphabet
+     * @param source        The data to convert
+     * @param off           Offset in array where conversion should begin
+     * @param len           Length of data to convert
+     * @param alphabet      is the encoding alphabet
      * @param maxLineLength maximum length of one line.
      * @return the BASE64-encoded byte array
      */
@@ -365,12 +375,11 @@ public class Base64Util {
      * This method returns the actual number of bytes that
      * were converted from the Base64 encoding.
      *
-     *
-     * @param source the array to convert
-     * @param srcOffset the index where conversion begins
+     * @param source      the array to convert
+     * @param srcOffset   the index where conversion begins
      * @param destination the array to hold the conversion
-     * @param destOffset the index where output will be put
-     * @param decodabet the decodabet for decoding Base64 content
+     * @param destOffset  the index where output will be put
+     * @param decodabet   the decodabet for decoding Base64 content
      * @return the number of decoded bytes converted
      * @since 1.3
      */
@@ -440,8 +449,8 @@ public class Base64Util {
      *
      * @param source The Base64 encoded data
      * @return decoded data
-     * @since 1.3
      * @throws Base64DecoderException
+     * @since 1.3
      */
     public static byte[] decode(byte[] source) throws Base64DecoderException {
         return decode(source, 0, source.length);
@@ -468,8 +477,8 @@ public class Base64Util {
      * @param off    The offset of where to begin decoding
      * @param len    The length of characters to decode
      * @return decoded data
-     * @since 1.3
      * @throws Base64DecoderException
+     * @since 1.3
      */
     public static byte[] decode(byte[] source, int off, int len)
             throws Base64DecoderException {

@@ -1,78 +1,40 @@
 package com.colin.demo.app.activity.fullscreen;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.colin.demo.app.R;
+
+import java.lang.ref.WeakReference;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class FullscreenActivity extends AppCompatActivity {
+    private static final int STATE_HIDE_VIEW = 0;       //隐藏状态栏 隐藏标题 隐藏下方控件
+    private static final int STATE_SHOW_CONTENT = 1;    //展示界面  全屏显示 与 STATE_HIDE_VIEW 相对出现  需要延迟
 
-    private static final boolean AUTO_HIDE = true;
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final int STATE_SHOW_VIEW = 2;       //展示界面  不全屏显示与STATE_SHOW_BUTTON 相对出现  需要延迟 显示状态栏 显示标题 显示下方控件
+    private static final int STATE_SHOW_BUTTON = 3;     //展示界面  不全屏显示与STATE_SHOW_VIEW 相对出现  需要延迟
 
+    public static final int DELAY_MILLIS = 3000;
+    public static final int UI_DELAY_MILLIS = 300;
+    //线程处理 显示隐藏效果
+    private final MyHandler mMyHandler = new MyHandler(this);
 
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
     private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
     private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
+
     private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,63 +53,93 @@ public class FullscreenActivity extends AppCompatActivity {
                 toggle();
             }
         });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.dummy_button).setOnTouchListener(mBottomButtonTouchListener);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mControlsView.setVisibility(View.GONE);
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+        mMyHandler.sendEmptyMessageDelayed(STATE_HIDE_VIEW, UI_DELAY_MILLIS);
     }
 
     /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
+     * 显示与隐藏 状态切换
      */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    private void toggle() {
+        if (mVisible) {
+            mMyHandler.sendEmptyMessage(STATE_HIDE_VIEW);
+        } else {
+            mMyHandler.sendEmptyMessage(STATE_SHOW_VIEW);
+        }
     }
+
+
+
+    @SuppressLint("HandlerLeak")
+    private final class MyHandler extends Handler {
+        private WeakReference<Activity> mWeakReference;
+
+        public MyHandler(Activity activity) {
+            mWeakReference = new WeakReference<Activity>(activity);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void handleMessage(Message msg) {
+            if (null == mWeakReference || null == mWeakReference.get() || null == msg) {
+                return;
+            }
+            switch (msg.what) {
+                case STATE_HIDE_VIEW:  //暴露处理
+                    showView(false);
+                    //延迟展示界面 全屏显示
+                    mMyHandler.sendEmptyMessageDelayed(STATE_SHOW_CONTENT, UI_DELAY_MILLIS);
+                    break;
+                case STATE_SHOW_CONTENT:
+                    mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                    break;
+                case STATE_SHOW_VIEW://暴露处理
+                    mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+                    //延迟展示标题与下方按钮
+                    mMyHandler.sendEmptyMessageDelayed(STATE_SHOW_BUTTON, UI_DELAY_MILLIS);
+                    break;
+                case STATE_SHOW_BUTTON:
+                    showView(true);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    /**
+     * 空间显示隐藏
+     *
+     * @param show
+     */
+    private void showView(boolean show) {
+        if (getSupportActionBar() != null && !show) {
+            getSupportActionBar().hide();
+        } else if (null != getSupportActionBar() && show) {
+            getSupportActionBar().show();
+        }
+        mControlsView.setVisibility(show ? View.VISIBLE : View.GONE);
+        this.mVisible = show;
+    }
+    /**
+     * 触摸下方按钮 3s 自动隐藏
+     */
+    private final View.OnTouchListener mBottomButtonTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mMyHandler.sendEmptyMessageDelayed(STATE_HIDE_VIEW, DELAY_MILLIS);
+            return false;
+        }
+    };
 }
