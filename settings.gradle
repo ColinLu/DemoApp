@@ -1,1 +1,1 @@
-include ':app',':DownloaderLibrary',':GooglePlayLicenseLibrary'
+include ':app'

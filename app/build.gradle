@@ -96,8 +96,6 @@ dependencies {
     implementation librarys.okhttp
     implementation librarys.gson
     implementation librarys.okgo
-    implementation project(':DownloaderLibrary')
-    implementation project(path: ':GooglePlayLicenseLibrary')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
