@@ -784,4 +784,5 @@ public class SystemActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+
 }
