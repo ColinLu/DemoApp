@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.colin.demo.app.activity.thread.ThreadActivity">
+
+    <include layout="@layout/layout_app_toolbar"/>
+
+    <Button
+        android:id="@+id/button_thread_normal"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@drawable/button_style"
+        android:text="多线程执行过程"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
+        tools:ignore="UnknownIdInLayout"/>
+
+    <Button
+        android:id="@+id/button_thread_join"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@drawable/button_style"
+        android:text="多线程按顺序执行-Join"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_normal"/>
+
+    <Button
+        android:id="@+id/button_thread_stop"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@drawable/button_style"
+        android:text="停止线程-标记"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_12"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/button_thread_interrupt"
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"/>
+
+    <Button
+        android:id="@+id/button_thread_interrupt"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:background="@drawable/button_style"
+        android:text="停止线程-interrupt"
+        android:textColor="@color/color_212121"
+        android:textSize="@dimen/text_12"
+        app:layout_constraintBottom_toBottomOf="@+id/button_thread_stop"
+        app:layout_constraintLeft_toRightOf="@+id/button_thread_stop"
+        app:layout_constraintRight_toLeftOf="@+id/button_thread_start"
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"
+        app:layout_constraintTop_toTopOf="@+id/button_thread_stop"/>
+
+    <Button
+        android:id="@+id/button_thread_start"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:background="@drawable/button_style"
+        android:text="开始线程-start"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_12"
+        app:layout_constraintBottom_toBottomOf="@+id/button_thread_stop"
+        app:layout_constraintLeft_toRightOf="@+id/button_thread_interrupt"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"
+        app:layout_constraintTop_toTopOf="@+id/button_thread_stop"/>
+
+    <TextView
+        android:id="@+id/text_show_thread_log"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:fadeScrollbars="false"
+        android:padding="@dimen/margin"
+        android:scrollHorizontally="true"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="@dimen/line_big"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
+        android:scrollbarTrackVertical="@drawable/scrollbar_vertical_track"
+        android:scrollbars="vertical"
+        android:singleLine="false"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_stop"/>
+</android.support.constraint.ConstraintLayout>

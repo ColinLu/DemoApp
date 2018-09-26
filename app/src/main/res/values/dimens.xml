@@ -18,11 +18,19 @@
     <dimen name="button_height">45dp</dimen>
     <!--字体大小-->
     <dimen name="text_size">14sp</dimen>
-    <dimen name="text_12">12sp</dimen>
     <dimen name="text_10">10sp</dimen>
+    <dimen name="text_12">12sp</dimen>
+    <dimen name="text_13">13sp</dimen>
+    <dimen name="text_14">14sp</dimen>
+    <dimen name="text_15">15sp</dimen>
+    <dimen name="text_16">16sp</dimen>
+    <dimen name="text_17">17sp</dimen>
+    <dimen name="text_18">18sp</dimen>
 
     <!--线条-->
     <dimen name="line_big">2dp</dimen>
     <dimen name="line_default">1dp</dimen>
     <dimen name="line_small">0.5dp</dimen>
+
+    <dimen name="dp_0">0dp</dimen>
 </resources>

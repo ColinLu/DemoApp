@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.colin.demo.app.R;
 import com.colin.demo.app.activity.bluetooth.BluetoothActivity;
+import com.colin.demo.app.activity.thread.ThreadActivity;
 import com.colin.demo.app.adapter.ItemAdapter;
 import com.colin.demo.app.base.BaseAdapter;
 import com.colin.demo.app.base.BaseFragment;
@@ -166,6 +167,7 @@ public class OtherFragment extends BaseFragment {
         mList.clear();
 
         mList.add(new ItemBean(1, "蓝牙技术", BluetoothActivity.class));
+        mList.add(new ItemBean(2, "线程操作", ThreadActivity.class));
 
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_NO);
         mAdapter.setFootState(BaseAdapter.FOOT_STATE_FINISH);
