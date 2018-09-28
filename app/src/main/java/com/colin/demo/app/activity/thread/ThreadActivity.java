@@ -27,11 +27,11 @@ public class ThreadActivity extends BaseActivity {
     private TextView text_show_thread_log;
     private Thread firstThread;
     private Thread secondThread;
-    private Thread thirdThread;
-    private ThirdRunnable mThirdRunnable;
+    private MyThread thirdThread;
 
-    private static final int THREAD_STOP_FLAG = 1;     //利用标记停止线程
-    private static final int THREAD_STOP_INTERRUPT = 2;//利用线程方法处理来实现停止
+    private static final int THREAD_STOP_FLAG = 1;          //利用标记停止线程
+    private static final int THREAD_STOP_SUSPEND = 2;       //利用标记停止线程
+    private static final int THREAD_STOP_INTERRUPT = 3;     //利用线程方法处理来实现停止
 
     //接收消息 输出打印日志  主线程操作
     @SuppressLint("HandlerLeak")
@@ -53,7 +53,6 @@ public class ThreadActivity extends BaseActivity {
         thirdThread = null;
         mMyHandler.removeCallbacksAndMessages(null);
         mMyHandler = null;
-        mThirdRunnable = null;
         super.onDestroy();
     }
 
@@ -110,6 +109,14 @@ public class ThreadActivity extends BaseActivity {
             }
 
         });
+        //volatile:建议使用，线程会执行完当前操作后停止。
+        findViewById(R.id.button_thread_suspend).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopThirdThread(THREAD_STOP_SUSPEND);
+            }
+
+        });
         //interrupt:建议不要用，当线程进入阻塞如 Thread.sleep(5000);调用interrupt会抛出异常，而且线程不会停止
         //interrupt()方法中断正在运行中的线程只会修改中断状态位;阻塞中的线程，那么就会抛出InterruptedException异常
         findViewById(R.id.button_thread_interrupt).setOnClickListener(new View.OnClickListener() {
@@ -119,54 +126,59 @@ public class ThreadActivity extends BaseActivity {
             }
 
         });
+
         findViewById(R.id.button_thread_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public synchronized void onClick(View v) {
-                if (null != thirdThread && thirdThread.isAlive()) {
-                    ToastUtil.showToast("线程正在运行");
+                if (null == thirdThread) {
+                    text_show_thread_log.setText("测试线程操作开始、挂起、暂停、恢复等操作");
+                    text_show_thread_log.scrollTo(0, 0);
+                    thirdThread = new MyThread("线程--3-->>");
+                    thirdThread.start();
                     return;
                 }
-
-                if (null == mThirdRunnable || null == thirdThread) {
-                    text_show_thread_log.setText("测试线程开始于暂停操作");
-                    text_show_thread_log.scrollTo(0, 0);
-
-                    mThirdRunnable = new ThirdRunnable();
-                    thirdThread = new Thread(mThirdRunnable, "线程--3-->>");
-                    thirdThread.start();
+                if (thirdThread.getStatus() == MyThread.RUNNING) {
+                    ToastUtil.showToast("当前线程正在运行");
+                    return;
                 }
-                mThirdRunnable.setRunning(true);
+                //停止了 重新开始
+                if (thirdThread.getStatus() == MyThread.STOP) {
+                    sendMessage(String.format("%s:%s", thirdThread.getName(), "重新开始"));
+                    thirdThread.myResume();
+                    return;
+                }
+                //挂起 可以重新开始
+                if (thirdThread.getStatus() == MyThread.SUSPEND) {
+                    sendMessage(String.format("%s:%s", thirdThread.getName(), "手动挂起"));
+                    thirdThread.myResume();
+                    return;
+                }
             }
 
         });
     }
 
     private void stopThirdThread(int stopWhich) {
-        if (null == mThirdRunnable || null == thirdThread) {
-            ToastUtil.showToast("线程未初始化");
+        if (null == thirdThread) {
+            ToastUtil.showToast("还未初始化线程");
             return;
         }
-        if (stopWhich == THREAD_STOP_FLAG && !mThirdRunnable.isRunning()) {
+        if (stopWhich == THREAD_STOP_FLAG && thirdThread.getStatus() == MyThread.STOP) {
             ToastUtil.showToast("线程停止状态中");
             return;
         }
-        if (stopWhich == THREAD_STOP_FLAG) {
-            ToastUtil.showToast("停止线程");
-            mThirdRunnable.setRunning(false);
-            sendMessage(String.format("%s:是否停止-->>%s", Thread.currentThread().getName(), String.valueOf(Thread.currentThread().isInterrupted())));
-            sendMessage(String.format("%s:是否停止-->>%s", Thread.currentThread().getName(), String.valueOf(Thread.currentThread().isInterrupted())));
-
-            sendMessage(String.format("%s:是否停止-3->>%s", thirdThread.getName(), String.valueOf(thirdThread.isInterrupted())));
-            sendMessage(String.format("%s:是否停止-3->>%s", thirdThread.getName(), String.valueOf(thirdThread.isInterrupted())));
+        if (stopWhich == THREAD_STOP_SUSPEND && thirdThread.getStatus() == MyThread.SUSPEND) {
+            ToastUtil.showToast("线程挂起状态");
             return;
         }
-
-        ToastUtil.showToast("停止线程,但不一定停止成功哦");
-        thirdThread.interrupt();
-        sendMessage(String.format("%s:是否停止-->>%s", Thread.currentThread().getName(), String.valueOf(Thread.currentThread().isInterrupted())));
-        sendMessage(String.format("%s:是否停止-->>%s", Thread.currentThread().getName(), String.valueOf(Thread.currentThread().isInterrupted())));
-        sendMessage(String.format("%s:是否停止-3->>%s", thirdThread.getName(), String.valueOf(thirdThread.isInterrupted())));
-        sendMessage(String.format("%s:是否停止-3->>%s", thirdThread.getName(), String.valueOf(thirdThread.isInterrupted())));
+        if (stopWhich == THREAD_STOP_FLAG) {
+            thirdThread.myStop();
+            return;
+        }
+        if (stopWhich == THREAD_STOP_SUSPEND) {
+            thirdThread.mySuspend();
+            return;
+        }
     }
 
     @Override
@@ -190,7 +202,6 @@ public class ThreadActivity extends BaseActivity {
             return;
         }
         stopThirdThread(THREAD_STOP_FLAG);
-        mThirdRunnable = null;
         text_show_thread_log.setText(isJoin ? "按顺序执行线程" : "不按顺序执行线程");
         text_show_thread_log.scrollTo(0, 0);
         startFirstThread(isJoin);
@@ -301,4 +312,87 @@ public class ThreadActivity extends BaseActivity {
         message.obj = messageObj;
         mMyHandler.sendMessage(message);
     }
+
+
+    private class MyThread extends Thread {
+        public static final int STOP = -1;        //停止
+        public static final int SUSPEND = 0;      //挂起
+        public static final int RUNNING = 1;      //运行
+        private int status = RUNNING;
+        private long count = STOP;
+
+
+        public MyThread(String name) {
+            super(name);
+        }
+
+        @Override
+        public synchronized void start() {
+            super.start();
+            status = RUNNING;
+        }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        public synchronized void run() {
+            // 判断是否停止
+            while (status != STOP) {
+                // 判断是否挂起
+                if (status == SUSPEND) {
+                    try {
+                        // 若线程挂起则阻塞自己
+                        wait();
+                    } catch (InterruptedException e) {
+                        sendMessage(String.format("%s:%s", getName(), "线程异常终止..."));
+                    }
+                } else {
+                    count++;
+                    sendMessage(String.format("%s:%d", getName(), count));
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        sendMessage(String.format("%s:%s", getName(), "线程异常终止..."));
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * 恢复
+         */
+        public synchronized void myResume() {
+            // 修改状态
+            status = RUNNING;
+            // 唤醒
+            notifyAll();
+        }
+
+        /**
+         * 获取线程状态
+         */
+        public synchronized int getStatus() {
+            return status;
+        }
+
+        /**
+         * 挂起
+         */
+        public void mySuspend() {
+            // 修改状态
+            status = SUSPEND;
+        }
+
+        /**
+         * 停止
+         */
+        public void myStop() {
+            // 修改状态
+            status = STOP;
+        }
+
+
+    }
+
+
 }

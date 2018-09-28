@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_color"
+    tools:context="com.colin.demo.app.activity.view.text.TextViewActivity">
+
+    <include layout="@layout/layout_app_toolbar"/>
+
+    <TextView
+        android:id="@+id/text_test_auto_xml"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/title_height"
+        android:autoSizeMaxTextSize="@dimen/text_21"
+        android:autoSizeMinTextSize="@dimen/text_4"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:padding="@dimen/margin"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_16"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
+        tools:ignore="UnknownIdInLayout,UnusedAttribute"/>
+
+    <View
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/line_default"
+        android:background="@color/app_line_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_test_auto_xml"/>
+
+    <TextView
+        android:id="@+id/text_test_auto_java"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/title_height"
+        android:autoSizeMaxTextSize="@dimen/text_21"
+        android:autoSizeMinTextSize="@dimen/text_4"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:padding="@dimen/margin"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_16"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_test_auto_xml"
+        tools:ignore="UnknownIdInLayout,UnusedAttribute"/>
+</android.support.constraint.ConstraintLayout>

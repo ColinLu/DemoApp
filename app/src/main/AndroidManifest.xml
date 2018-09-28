@@ -134,6 +134,8 @@
         </activity>
         <activity android:name=".activity.thread.ThreadActivity">
         </activity>
+        <activity android:name=".activity.view.text.TextViewActivity">
+        </activity>
     </application>
 
 </manifest>

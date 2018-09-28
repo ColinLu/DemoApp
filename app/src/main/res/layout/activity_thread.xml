@@ -40,53 +40,93 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_thread_normal"/>
 
-    <Button
-        android:id="@+id/button_thread_stop"
+    <TextView
+        android:id="@+id/button_thread_start"
         android:layout_width="@dimen/dp_0"
         android:layout_height="@dimen/button_height"
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin"
         android:layout_marginTop="@dimen/margin"
+        android:autoSizeMaxTextSize="@dimen/text_14"
+        android:autoSizeMinTextSize="@dimen/text_4"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
         android:background="@drawable/button_style"
-        android:text="停止线程-标记"
+        android:gravity="center"
+        android:text="线程-Start"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_12"
+        android:textSize="@dimen/text_10"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/button_thread_interrupt"
-        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"/>
+        app:layout_constraintRight_toLeftOf="@+id/button_thread_suspend"
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"
+        tools:ignore="UnusedAttribute"/>
 
-    <Button
+    <TextView
+        android:id="@+id/button_thread_suspend"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:autoSizeMaxTextSize="@dimen/text_14"
+        android:autoSizeMinTextSize="@dimen/text_4"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:background="@drawable/button_style"
+        android:gravity="center"
+        android:text="线程-Suspend"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_10"
+        app:layout_constraintBottom_toBottomOf="@+id/button_thread_start"
+        app:layout_constraintLeft_toRightOf="@+id/button_thread_start"
+        app:layout_constraintRight_toLeftOf="@+id/button_thread_stop"
+        app:layout_constraintTop_toTopOf="@+id/button_thread_start"
+        tools:ignore="UnusedAttribute"/>
+
+    <TextView
+        android:id="@+id/button_thread_stop"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:autoSizeMaxTextSize="@dimen/text_14"
+        android:autoSizeMinTextSize="@dimen/text_4"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:background="@drawable/button_style"
+        android:gravity="center"
+        android:text="线程-Stop"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_10"
+        app:layout_constraintBottom_toBottomOf="@+id/button_thread_start"
+        app:layout_constraintLeft_toRightOf="@+id/button_thread_suspend"
+        app:layout_constraintRight_toLeftOf="@+id/button_thread_interrupt"
+        app:layout_constraintTop_toTopOf="@+id/button_thread_start"
+        tools:ignore="UnusedAttribute"/>
+
+    <TextView
         android:id="@+id/button_thread_interrupt"
         android:layout_width="@dimen/dp_0"
         android:layout_height="@dimen/dp_0"
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin"
+        android:autoSizeMaxTextSize="@dimen/text_14"
+        android:autoSizeMinTextSize="@dimen/text_4"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:autoText="true"
         android:background="@drawable/button_style"
-        android:text="停止线程-interrupt"
+        android:gravity="center"
+        android:text="测试字体大小自适应的问题"
         android:textColor="@color/color_212121"
-        android:textSize="@dimen/text_12"
-        app:layout_constraintBottom_toBottomOf="@+id/button_thread_stop"
+        android:textSize="@dimen/text_14"
+        app:layout_constraintBottom_toBottomOf="@+id/button_thread_start"
         app:layout_constraintLeft_toRightOf="@+id/button_thread_stop"
-        app:layout_constraintRight_toLeftOf="@+id/button_thread_start"
-        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"
-        app:layout_constraintTop_toTopOf="@+id/button_thread_stop"/>
-
-    <Button
-        android:id="@+id/button_thread_start"
-        android:layout_width="@dimen/dp_0"
-        android:layout_height="@dimen/dp_0"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin"
-        android:background="@drawable/button_style"
-        android:text="开始线程-start"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_12"
-        app:layout_constraintBottom_toBottomOf="@+id/button_thread_stop"
-        app:layout_constraintLeft_toRightOf="@+id/button_thread_interrupt"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_thread_join"
-        app:layout_constraintTop_toTopOf="@+id/button_thread_stop"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_thread_start"
+        app:layout_constraintTop_toTopOf="@+id/button_thread_start"
+        tools:ignore="UnusedAttribute"/>
+
 
     <TextView
         android:id="@+id/text_show_thread_log"
