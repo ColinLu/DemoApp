@@ -66,13 +66,8 @@ public class FullscreenActivity extends AppCompatActivity {
      * 显示与隐藏 状态切换
      */
     private void toggle() {
-        if (mVisible) {
-            mMyHandler.sendEmptyMessage(STATE_HIDE_VIEW);
-        } else {
-            mMyHandler.sendEmptyMessage(STATE_SHOW_VIEW);
-        }
+        mMyHandler.sendEmptyMessage(mVisible ? STATE_HIDE_VIEW : STATE_SHOW_VIEW);
     }
-
 
 
     @SuppressLint("HandlerLeak")
@@ -80,7 +75,7 @@ public class FullscreenActivity extends AppCompatActivity {
         private WeakReference<Activity> mWeakReference;
 
         public MyHandler(Activity activity) {
-            mWeakReference = new WeakReference<Activity>(activity);
+            mWeakReference = new WeakReference<>(activity);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -132,6 +127,7 @@ public class FullscreenActivity extends AppCompatActivity {
         mControlsView.setVisibility(show ? View.VISIBLE : View.GONE);
         this.mVisible = show;
     }
+
     /**
      * 触摸下方按钮 3s 自动隐藏
      */
