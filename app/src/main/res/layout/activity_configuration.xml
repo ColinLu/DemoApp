@@ -31,7 +31,8 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/ic_launcher_background"
                 android:fitsSystemWindows="true"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                tools:ignore="ContentDescription" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
