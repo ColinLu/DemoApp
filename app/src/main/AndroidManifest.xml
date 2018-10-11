@@ -80,6 +80,12 @@
             android:exported="false">
         </service>
 
+        <service
+            android:name=".service.BinderService"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedService"/>
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
@@ -95,47 +101,28 @@
             android:label="@string/title_activity_main2"/>
         <activity android:name=".activity.popupwindow.PopupWindowActivity"/>
         <activity
-            android:name=".activity.viewpager.ViewPagerActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".activity.viewpager.ViewPagerActivity"/>
         <activity android:name=".activity.recyclerview.RecyclerViewActivity"/>
-        <activity android:name=".activity.downloadmanager.DownloadManagerActivity">
-        </activity>
+        <activity android:name=".activity.downloadmanager.DownloadManagerActivity"/>
         <activity
             android:name=".activity.configuration.ConfigurationActivity"
-            android:label="@string/title_activity_configuration"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".activity.touch.TouchActivity">
-        </activity>
-        <activity android:name=".activity.bluetooth.BluetoothActivity">
-        </activity>
-        <activity android:name=".activity.configuration.SystemActivity">
-        </activity>
-        <activity android:name=".activity.service.ServiceActivity">
-        </activity>
+            android:label="@string/title_activity_configuration"/>
+        <activity android:name=".activity.touch.TouchActivity"/>
+        <activity android:name=".activity.bluetooth.BluetoothActivity"/>
+        <activity android:name=".activity.configuration.SystemActivity"/>
+        <activity android:name=".activity.service.ServiceActivity"/>
 
-        <service
-            android:name=".service.BinderService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
 
-        <activity android:name=".activity.constraintlayout.ConstraintLayoutActivity">
-        </activity>
+        <activity android:name=".activity.constraintlayout.ConstraintLayoutActivity"/>
         <activity
             android:name=".activity.fullscreen.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme">
-        </activity>
-        <activity android:name=".activity.picker.PickerActivity">
-        </activity>
-        <activity android:name=".activity.handler.HandlerActivity">
-        </activity>
-        <activity android:name=".activity.thread.ThreadActivity">
-        </activity>
-        <activity android:name=".activity.view.text.TextViewActivity">
-        </activity>
+            android:theme="@style/FullscreenTheme"/>
+        <activity android:name=".activity.picker.PickerActivity"/>
+        <activity android:name=".activity.handler.HandlerActivity"/>
+        <activity android:name=".activity.thread.ThreadActivity"/>
+        <activity android:name=".activity.view.text.TextViewActivity"/>
     </application>
 
 </manifest>

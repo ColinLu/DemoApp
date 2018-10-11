@@ -35,14 +35,16 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public final static int FOOT_STATE_FINISH = 1;
     public final static int FOOT_STATE_WAIT = 2;
 
-    protected Context mContext;
-    protected List<T> mItemList;
+    //final  确保初始化
+    final protected Context mContext;
+    final protected List<T> mItemList;
+    final protected LayoutInflater mLayoutInflater;
+
     protected boolean showEmpty = true;            //默认显示空布局
     protected boolean showFoot = true;             //默认显示加载更多布局    当然也要    与footState 一起使用
     protected int footState = FOOT_STATE_FINISH;   //默认 加载更多布局      状态加载完成 loadMore 一起使用
     protected int emptyState = EMPTY_STATE_LOADING;//默认 加载中
     protected OnRecyclerItemClickListener mOnRecyclerItemClickListener;
-    protected LayoutInflater mLayoutInflater;
 
 
     /**
@@ -200,8 +202,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
 
-
-
     /**
      * 处理瀑布流 添加空布局 和 更多
      *
@@ -247,6 +247,16 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         }
     }
 
+    public void remove(int position) {
+        mItemList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void add(int position, T item) {
+        mItemList.add(position, item);
+        notifyItemInserted(position);
+    }
+
 
     /**
      * 设置监听 判断接口回调
@@ -268,4 +278,5 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             }
         }
     }
+
 }

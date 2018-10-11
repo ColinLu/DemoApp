@@ -55,7 +55,6 @@ public class InitViewUtil {
     }
 
 
-
     /**
      * @param recyclerView
      * @param grid
@@ -78,9 +77,11 @@ public class InitViewUtil {
             initRecyclerView(recyclerView, new LinearLayoutManager(recyclerView.getContext()), adapter, haveScrollView);
         }
     }
+
     public static void initRecyclerView(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter) {
         initRecyclerView(recyclerView, layoutManager, adapter, false);
     }
+
     /**
      * @param recyclerView
      * @param layoutManager
@@ -91,7 +92,15 @@ public class InitViewUtil {
         if (null == recyclerView || null == layoutManager || null == adapter) {
             return;
         }
+
+
+        if (layoutManager instanceof GridLayoutManager) {
+            ((GridLayoutManager) layoutManager).setRecycleChildrenOnDetach(true);
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            ((LinearLayoutManager) layoutManager).setRecycleChildrenOnDetach(true);
+        }
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemViewCacheSize(10);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setFocusable(false);
@@ -154,8 +163,6 @@ public class InitViewUtil {
     }
 
 
-
-
     @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface", "AddJavascriptInterface"})
     public static void initWebView(WebView webview, String url, IWebViewCallBack iWebViewCallBack) {
         // 设置支持JavaScript脚本
@@ -184,7 +191,6 @@ public class InitViewUtil {
         webview.setWebChromeClient(new MyWebChromeClient(iWebViewCallBack));
         webview.loadUrl(url, addWebHttpHeader());
     }
-
 
 
     public static void initWebViewLoadHtml(WebView webview, String html, IWebViewCallBack iWebViewCallBack) {

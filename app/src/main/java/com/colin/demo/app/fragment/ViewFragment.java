@@ -85,6 +85,7 @@ public class ViewFragment extends BaseFragment {
         mAdapter.setEmptyState(BaseAdapter.EMPTY_STATE_LOADING);
         mAdapter.notifyDataSetChanged();
         InitViewUtil.initRecyclerView(recycler_list, mAdapter);
+        RecyclerView.RecycledViewPool recycledViewPool = recycler_list.getRecycledViewPool();
     }
 
     @Override
@@ -153,6 +154,21 @@ public class ViewFragment extends BaseFragment {
                 }
             }
         });
+
+
+//        recycler_list.addOnItemTouchListener(new MyOnRecyclerItemClickListener(recycler_list) {
+//            @Override
+//            public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
+//                long itemId = viewHolder.getItemId();
+//                LogUtil.e("position-->>" + String.valueOf(position));
+//                LogUtil.e("itemId---->>" + String.valueOf(itemId));
+//                LogUtil.e("layout_item_content-->>" + String.valueOf(R.id.layout_item_content));
+//                LogUtil.e("text_item_id--------->>" + String.valueOf(R.id.text_item_id));
+//                LogUtil.e("image_item_icon------>>" + String.valueOf(R.id.image_item_icon));
+//                LogUtil.e("text_item_content---->>" + String.valueOf(R.id.text_item_content));
+//                LogUtil.e("view_id-------------->>" + String.valueOf(view.getId()));
+//            }
+//        });
     }
 
     @Override
