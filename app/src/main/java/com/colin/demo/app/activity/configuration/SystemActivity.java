@@ -1,6 +1,8 @@
 package com.colin.demo.app.activity.configuration;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -16,6 +18,7 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
+import android.widget.Toast;
 
 import com.colin.demo.app.R;
 import com.colin.demo.app.adapter.SystemAdapter;
@@ -134,13 +137,35 @@ public class SystemActivity extends BaseActivity {
                 if (null == object || !(object instanceof ItemBean)) {
                     return;
                 }
+
                 ItemBean itemBean = (ItemBean) object;
+                if (view.getId() == R.id.text_item_value) {
+                    copyValue(itemBean);
+                    return;
+                }
                 if (StringUtil.isEmpty(itemBean.description)) {
                     return;
                 }
                 new DialogTips(SystemActivity.this).setMessage(itemBean.description).show();
             }
         });
+    }
+
+    private void copyValue(ItemBean itemBean) {
+        if (null == itemBean || StringUtil.isEmpty(itemBean.value)) {
+            return;
+        }
+        //剪切板管理工具类
+        ClipboardManager mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (null == mClipboardManager) {
+            return;
+        }
+        //剪切板Data对象
+        //创建一个新的文本clip对象
+        ClipData mClipData = ClipData.newPlainText("Simple test", itemBean.value);
+        //把clip对象放在剪贴板中
+        mClipboardManager.setPrimaryClip(mClipData);
+        Toast.makeText(this, String.format("复制值(%s)到剪切板成功", itemBean.value), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -290,6 +315,7 @@ public class SystemActivity extends BaseActivity {
         }
 
         mList.add(new ItemBean("主板", Build.BOARD, "The name of the underlying board, like \"goldfish\"."));
+        mList.add(new ItemBean("主板", Build.BOARD, "The name of the underlying board, like \"goldfish\"."));
         mList.add(new ItemBean("版本型号", Build.MODEL, "The end-user-visible name for the end product. "));
         mList.add(new ItemBean("手机制造商", Build.PRODUCT, "The name of the overall product."));
         mList.add(new ItemBean("制造商", Build.MANUFACTURER, "The manufacturer of the product/hardware. "));
@@ -373,7 +399,7 @@ public class SystemActivity extends BaseActivity {
         mList.add(new ItemBean("语音信箱的检索字母标识符", null == telephonyManager ? "" : telephonyManager.getVoiceMailAlphaTag(), " Retrieves the alphabetic identifier associated with the voice mail number."));
 
 
-        mList.add(new ItemBean("获取设备的当前位置", null == telephonyManager ? "" : telephonyManager.getCellLocation().toString(), "#getAllCellInfo} instead"));
+        mList.add(new ItemBean("获取设备的当前位置", null == telephonyManager || null == telephonyManager.getCellLocation() ? "" : telephonyManager.getCellLocation().toString(), "#getAllCellInfo} instead"));
         //ACCESS_COARSE_LOCATION
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mList.add(new ItemBean("AllCellInfo", listToString(null == telephonyManager ? null : telephonyManager.getAllCellInfo()), "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available."));
