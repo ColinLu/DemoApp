@@ -3,8 +3,6 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 28
 
-
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
@@ -17,13 +15,18 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+//        debug {
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
     }
 
 
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
 
@@ -38,13 +41,45 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
+/**
+ * 之前从网上进行查找的时候，都说打包后的jar包地址是在from('build/intermediates/bundles/release/')下，
+ * 但是我发现怎么都找不到。原来是因为intermediates的结构发生了改变。from('build/intermediates/packaged-classes/release/')
+ */
+//jar名字
+def NAME = "DeviceApi"
+//jar版本号
+def VERSION = "_V_1.0.0"
+//jar包全名带后缀
+def JAR_NAME = NAME + VERSION + ".jar"
+//删除多余文件的路劲
+def DELETE = "build/libs/" + JAR_NAME
+/**
+ * 拷贝文件的路劲
+ * 之前从网上进行查找的时候，都说打包后的jar包地址是在from('build/intermediates/bundles/release/')下，
+ * 但是我发现怎么都找不到。原来是因为intermediates的结构发生了改变。from('build/intermediates/packaged-classes/release/')
+ */
+def FROM = "build/intermediates/intermediate-jars/release/"
+//def FROM = 'build/outputs/jar/repackaged.jar'
+//def FROM = 'build/intermediates/bundles/release/'
+//保存文件路劲
+def INTO = "build/libs/"
+//jar开始文件名字带后缀
+def SOURCE_NAME = "classes.jar"
+def zipFile = file('build/intermediates/bundles/default/classes.jar') //待打包文件位置
+
 task makeJar(type: Copy) {
-    delete 'build/libs/DeviceApi.jar'
-    from('build/intermediates/bundles/release/')
-    into('build/libs/')
-    include('classes.jar')
-    rename ('classes.jar', 'DeviceApi.jar')
+    //删除存在的
+    delete DELETE
+    //设置拷贝的文件
+    from(FROM)
+    //打进jar包后的文件目录
+    into(INTO)
+    //将classes.jar放入build/libs/目录下
+    //include ,exclude参数来设置过滤
+    //（我们只关心classes.jar这个文件）
+    include(SOURCE_NAME)
+    //重命名
+    rename(SOURCE_NAME, JAR_NAME)
 }
 
-makeJar.dependsOn(build)
-
+//控制台（Terminal）输入命令-->>gradlew makeJar

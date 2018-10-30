@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                DeviceApi.showToast(this);
+                DeviceApi.getInstance().showToast(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
