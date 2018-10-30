@@ -1,5 +1,6 @@
 package com.colin.demo.app.activity;
 
+import android.app.LauncherActivity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,6 +26,7 @@ import com.colin.demo.app.effect.DepthPageTransformer;
 import com.colin.demo.app.fragment.MethodFragment;
 import com.colin.demo.app.fragment.OtherFragment;
 import com.colin.demo.app.fragment.ViewFragment;
+import com.colin.device.api.library.DeviceApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -159,12 +161,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                DeviceApi.showToast(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

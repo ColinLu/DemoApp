@@ -74,18 +74,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
-
+        <!--下载服务-->
         <service
             android:name=".service.DownloadIntentService"
             android:exported="false">
         </service>
-
+        <!--demo 绑定服务-->
         <service
             android:name=".service.BinderService"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedService"/>
-
+        <!--主界面 3个碎片Fragment入口-->
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
@@ -119,6 +119,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"/>
+
         <activity android:name=".activity.picker.PickerActivity"/>
         <activity android:name=".activity.handler.HandlerActivity"/>
         <activity android:name=".activity.thread.ThreadActivity"/>

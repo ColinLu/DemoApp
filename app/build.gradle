@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-def config = rootProject.ext.android        // 配置
-def librarys = rootProject.ext.dependencies // 依赖
+def config = rootProject.ext.android            // 配置
+def libraries = rootProject.ext.dependencies    // 依赖
 
 // 加载 sign.properties 资源
 Properties signingProperties = new Properties()
@@ -84,21 +84,22 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support.constraint:constraint-layout:$constraint_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation librarys.appcompat
-    implementation librarys.supportV4
-    implementation librarys.design
-    implementation librarys.cardview
-    implementation librarys.vectorDrawable
-    implementation librarys.recyclerview
-    implementation librarys.constraint
-    implementation librarys.glide
-    implementation librarys.okhttp
-    implementation librarys.gson
-    implementation librarys.okgo
+    implementation libraries.appcompat
+    implementation libraries.supportV4
+    implementation libraries.design
+    implementation libraries.cardview
+    implementation libraries.vectorDrawable
+    implementation libraries.recyclerview
+    implementation libraries.constraint
+    implementation libraries.glide
+    implementation libraries.okhttp
+    implementation libraries.gson
+    implementation libraries.okgo
+
+    implementation project(':DeviceApiLibrary')
 }
 repositories {
     mavenCentral()
