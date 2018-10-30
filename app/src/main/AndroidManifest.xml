@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.colin.demo.app">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.colin.demo.app">
 
     <!-- Required to access Google Play Licensing -->
-    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
 
     <!-- Required to download files from Google Play -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Required to keep CPU alive while downloading files (NOT to keep screen awake) -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- Required to poll the state of the network connection and respond to changes -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Required to check whether Wi-Fi is enabled -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- Required to read and write the expansion files on shared storage -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- 获取网络状态 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- 安装app需要权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 安装app需要权限 适配8.0 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- 定位权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 蓝牙权限 -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!-- 除了蓝牙权限外，如果需要BLE feature则还需要声明uses-feature： -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true"/>
-
+        android:required="true" />
+    <!--陀螺仪传感器-->
+    <uses-feature
+        android:name="android.hardware.sensor.proximity"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.gyroscope"
+        android:required="true" />
     <!-- 读取手机信息 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 网络状态获取 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".base.AppApplication"
@@ -60,8 +66,8 @@
         tools:ignore="GoogleAppIndexingWarning">
         <receiver android:name=".download.ApkInstallReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
         <!-- 路径存储配置 -->
@@ -72,58 +78,53 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
-        <!--下载服务-->
+
         <service
             android:name=".service.DownloadIntentService"
-            android:exported="false">
-        </service>
-        <!--demo 绑定服务-->
+            android:exported="false" />
         <service
             android:name=".service.BinderService"
             android:enabled="true"
             android:exported="true"
-            tools:ignore="ExportedService"/>
-        <!--主界面 3个碎片Fragment入口-->
+            tools:ignore="ExportedService" />
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/DrawerStyle">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.BottomNavigationTabActivity"
-            android:label="@string/title_activity_main2"/>
-        <activity android:name=".activity.popupwindow.PopupWindowActivity"/>
-        <activity
-            android:name=".activity.viewpager.ViewPagerActivity"/>
-        <activity android:name=".activity.recyclerview.RecyclerViewActivity"/>
-        <activity android:name=".activity.downloadmanager.DownloadManagerActivity"/>
+            android:label="@string/title_activity_main2" />
+        <activity android:name=".activity.popupwindow.PopupWindowActivity" />
+        <activity android:name=".activity.viewpager.ViewPagerActivity" />
+        <activity android:name=".activity.recyclerview.RecyclerViewActivity" />
+        <activity android:name=".activity.downloadmanager.DownloadManagerActivity" />
         <activity
             android:name=".activity.configuration.ConfigurationActivity"
-            android:label="@string/title_activity_configuration"/>
-        <activity android:name=".activity.touch.TouchActivity"/>
-        <activity android:name=".activity.bluetooth.BluetoothActivity"/>
-        <activity android:name=".activity.configuration.SystemActivity"/>
-        <activity android:name=".activity.service.ServiceActivity"/>
-
-
-        <activity android:name=".activity.constraintlayout.ConstraintLayoutActivity"/>
+            android:label="@string/title_activity_configuration" />
+        <activity android:name=".activity.touch.TouchActivity" />
+        <activity android:name=".activity.bluetooth.BluetoothActivity" />
+        <activity android:name=".activity.configuration.SystemActivity" />
+        <activity android:name=".activity.service.ServiceActivity" />
+        <activity android:name=".activity.constraintlayout.ConstraintLayoutActivity" />
         <activity
             android:name=".activity.fullscreen.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme"/>
-
-        <activity android:name=".activity.picker.PickerActivity"/>
-        <activity android:name=".activity.handler.HandlerActivity"/>
-        <activity android:name=".activity.thread.ThreadActivity"/>
-        <activity android:name=".activity.view.text.TextViewActivity"/>
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".activity.picker.PickerActivity" />
+        <activity android:name=".activity.handler.HandlerActivity" />
+        <activity android:name=".activity.thread.ThreadActivity" />
+        <activity android:name=".activity.view.text.TextViewActivity" />
+        <activity android:name=".activity.sensor.SensorActivity" />
     </application>
 
 </manifest>

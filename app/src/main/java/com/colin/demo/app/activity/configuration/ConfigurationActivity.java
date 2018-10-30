@@ -42,6 +42,7 @@ public class ConfigurationActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppUtil.fullScreen(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
     }
@@ -50,7 +51,6 @@ public class ConfigurationActivity extends BaseActivity {
     protected void initView() {
         this.text_configuration_detail = this.findViewById(R.id.text_configuration_detail);
         this.image_top_bg = this.findViewById(R.id.image_top_bg);
-        AppUtil.fullScreen(this);
     }
 
     @Override
